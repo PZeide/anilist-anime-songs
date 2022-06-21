@@ -1,0 +1,39 @@
+{
+  "name": "anilist-anime-songs",
+  "version": "0.0.0",
+  "description": "",
+  "author": "Zeide",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=12"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "dev": "rollup -wc rollup.conf.js",
+    "clean": "del-cli dist types",
+    "build:js": "rollup -c rollup.conf.js",
+    "prebuild": "run-s ci clean",
+    "build": "cross-env NODE_ENV=production run-s build:js",
+    "ci": "run-s lint",
+    "lint": "eslint --ext .ts,.tsx ."
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.18.0",
+    "@violentmonkey/dom": "^2.1.0",
+    "@violentmonkey/ui": "^0.7.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.17.12",
+    "@gera2ld/plaid": "~2.5.2",
+    "@gera2ld/plaid-common-ts": "~2.5.1",
+    "@gera2ld/plaid-rollup": "~2.5.0",
+    "@types/tampermonkey": "^4.0.5",
+    "del-cli": "^4.0.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^8.0.1",
+    "prettier": "^2.6.2",
+    "rollup-plugin-userscript": "^0.1.1"
+  }
+}

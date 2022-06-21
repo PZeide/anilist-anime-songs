@@ -1,0 +1,53 @@
+.songEntry {
+  background: rgb(var(--color-foreground));
+  border-radius: 3px;
+  margin-bottom: 15px;
+  padding: 18px;
+  position: relative;
+  font-size: 1.4rem;
+}
+
+.noSongEntries {
+  background: rgb(var(--color-foreground));
+  border-radius: 3px;
+  display: block;
+  font-size: 1.2rem;
+  padding: 10px;
+  text-align: center;
+}
+
+.songTitle {
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+
+.songArtist {
+  margin-top: 3px;
+}
+
+.songType {
+  margin-top: 6px;
+}
+
+.songSearchEngines {
+  margin-top: 10px;
+  display: flex;
+  gap: 6px;
+}
+
+.songSearchEngineEntry {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
+  padding: 3px;
+  outline: none;
+}
+
+.songSearchEngineEntry:hover {
+  transition-duration: .15s;
+  opacity: .6;
+}
+
+.songSearchEngineEntry > svg {
+  fill: white;
+}
