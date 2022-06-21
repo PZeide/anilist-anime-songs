@@ -21,7 +21,7 @@ async function fetchMalId(anilistId: number): Promise<number | null> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json",
+      Accept: "application/json",
     },
     data: JSON.stringify({ query, variables }),
   });
@@ -39,7 +39,7 @@ async function fetchAnnidFromMal(malId: number): Promise<number | null> {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json",
+      Accept: "application/json",
     },
   });
 
@@ -48,7 +48,10 @@ async function fetchAnnidFromMal(malId: number): Promise<number | null> {
     return null;
   }
 
-  const annExternal = response.data.find((external: { name: string; url: string; }) => external.name === "AnimeNewsNetwork");
+  const annExternal = response.data.find(
+    (external: { name: string; url: string }) =>
+      external.name === "AnimeNewsNetwork"
+  );
   if (annExternal === undefined) {
     console.warn("No candidate ANN id found for id: " + malId);
     return null;
@@ -83,7 +86,10 @@ async function getAnnId(anilistId: number): Promise<number | null> {
   return annId;
 }
 
-async function fetchAnilistStaffId(id: number, names: string[]): Promise<number | null> {
+async function fetchAnilistStaffId(
+  id: number,
+  names: string[]
+): Promise<number | null> {
   const cachedAnilistStaffId = getCachedItem<number>("anilistStaffId", id);
   if (cachedAnilistStaffId !== null) {
     return cachedAnilistStaffId;
@@ -102,51 +108,64 @@ async function fetchAnilistStaffId(id: number, names: string[]): Promise<number 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json",
+        Accept: "application/json",
       },
       data: JSON.stringify({ query, variables }),
     });
 
     if (response.data.Staff !== undefined) {
       const anilistStaffId = response.data.Staff.id;
-      addCachedItem<number>("anilistStaffId", id, anilistStaffId, anilistStaffIdTtl);
+      addCachedItem<number>(
+        "anilistStaffId",
+        id,
+        anilistStaffId,
+        anilistStaffIdTtl
+      );
       return response.data.Staff.id;
     }
   }
-  
+
   return null;
 }
 
 type AnisongStaff = {
-  id: number,
-  names: string[],
-  members: AnisongStaff[] | null,
-}
+  id: number;
+  names: string[];
+  members: AnisongStaff[] | null;
+};
 
-async function fetchSongsFromAnisongDb(fetchType: "opening" | "insert" |  "ending", annId: number): Promise<AnimeSong[]> {
+async function fetchSongsFromAnisongDb(
+  fetchType: SongType,
+  annId: number
+): Promise<AnimeSong[]> {
   const response = await requestJson(`${ANISONGDB_API}/annId_request`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Accept": "application/json",
+      Accept: "application/json",
     },
-    data: JSON.stringify({ 
+    data: JSON.stringify({
       annId: annId,
-      "ignore_duplicate": false,
-      "opening_filter": fetchType === "opening",
-      "ending_filter": fetchType === "ending",
-      "insert_filter": fetchType === "insert",
-     }),
+      ignore_duplicate: false,
+      opening_filter: fetchType === "Opening",
+      ending_filter: fetchType === "Ending",
+      insert_filter: fetchType === "Insert",
+    }),
   });
 
-  async function mapStaffs(anisongStaffs: Array<AnisongStaff>): Promise<AnimeSongStaff[]> {
+  async function mapStaffs(
+    anisongStaffs: Array<AnisongStaff>
+  ): Promise<AnimeSongStaff[]> {
     const staffs = [];
     for (const anisongStaff of anisongStaffs) {
       staffs.push({
         id: anisongStaff.id,
         names: anisongStaff.names,
         members: await mapStaffs(anisongStaff.members || []),
-        anilistId: await fetchAnilistStaffId(anisongStaff.id, anisongStaff.names),
+        anilistId: await fetchAnilistStaffId(
+          anisongStaff.id,
+          anisongStaff.names
+        ),
       });
     }
 
@@ -174,17 +193,23 @@ async function fetchSongsFromAnisongDb(fetchType: "opening" | "insert" |  "endin
   return songs;
 }
 
-export async function fetchOpeningsSongs(anilistId: number): Promise<AnimeSong[]> {
+export async function fetchOpeningsSongs(
+  anilistId: number
+): Promise<AnimeSong[]> {
   const annId = await getAnnId(anilistId);
-  return await fetchSongsFromAnisongDb("opening", annId);
+  return await fetchSongsFromAnisongDb("Opening", annId);
 }
 
-export async function fetchInsertSongs(anilistId: number): Promise<AnimeSong[]> {
+export async function fetchInsertSongs(
+  anilistId: number
+): Promise<AnimeSong[]> {
   const annId = await getAnnId(anilistId);
-  return await fetchSongsFromAnisongDb("insert", annId);
+  return await fetchSongsFromAnisongDb("Insert", annId);
 }
 
-export async function fetchEndingSongs(anilistId: number): Promise<AnimeSong[]> {
+export async function fetchEndingSongs(
+  anilistId: number
+): Promise<AnimeSong[]> {
   const annId = await getAnnId(anilistId);
-  return await fetchSongsFromAnisongDb("ending", annId);
+  return await fetchSongsFromAnisongDb("Ending", annId);
 }

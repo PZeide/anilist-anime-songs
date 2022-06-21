@@ -15,9 +15,12 @@ function invokeQueue() {
 
 export function searchContainer(): void {
   VM.observe(document.body, () => {
-    const found = document.querySelectorAll(".grid-section-wrap")[2];
+    const found = document.querySelectorAll(".grid-section-wrap")[1];
 
-    if (found !== undefined) {
+    if (
+      found !== undefined &&
+      found.nextElementSibling.classList.contains("recommendations")
+    ) {
       target = found;
       invokeQueue();
       return true;

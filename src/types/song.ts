@@ -1,5 +1,7 @@
+declare type SongType = "Opening" | "Insert" | "Ending";
+
 declare interface AnimeSong {
-  type: "Opening" | "Insert" | "Ending";
+  type: SongType;
   // index is null only for insert songs
   index: number | null;
   name: string;
