@@ -1,6 +1,7 @@
 declare interface AnimeSong {
   type: "Opening" | "Insert" | "Ending";
-  index: number;
+  // index is null only for insert songs
+  index: number | null;
   name: string;
   files: AnimeSongFiles;
   artists: AnimeSongStaff[];

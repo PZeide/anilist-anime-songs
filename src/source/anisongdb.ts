@@ -151,7 +151,7 @@ async function fetchSongsFromAnisongDb(annId: number): Promise<AnimeSong[]> {
   for (const anisongSong of response) {
     songs.push({
       type: anisongSong.songType.split(" ")[0],
-      index: parseInt(anisongSong.songType.split(" ")[1]),
+      index: parseInt(anisongSong.songType.split(" ")[1]) || null,
       name: anisongSong.songName,
       files: {
         audio: anisongSong.audio || null,
