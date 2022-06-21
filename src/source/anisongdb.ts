@@ -123,14 +123,20 @@ type AnisongStaff = {
   members: AnisongStaff[] | null,
 }
 
-async function fetchSongsFromAnisongDb(annId: number): Promise<AnimeSong[]> {
+async function fetchSongsFromAnisongDb(fetchType: "opening" | "insert" |  "ending", annId: number): Promise<AnimeSong[]> {
   const response = await requestJson(`${ANISONGDB_API}/annId_request`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Accept": "application/json",
     },
-    data: JSON.stringify({ annId }),
+    data: JSON.stringify({ 
+      annId: annId,
+      "ignore_duplicate": false,
+      "opening_filter": fetchType === "opening",
+      "ending_filter": fetchType === "ending",
+      "insert_filter": fetchType === "insert",
+     }),
   });
 
   async function mapStaffs(anisongStaffs: Array<AnisongStaff>): Promise<AnimeSongStaff[]> {
@@ -168,7 +174,17 @@ async function fetchSongsFromAnisongDb(annId: number): Promise<AnimeSong[]> {
   return songs;
 }
 
-export async function fetchSongs(anilistId: number): Promise<AnimeSong[]> {
+export async function fetchOpeningsSongs(anilistId: number): Promise<AnimeSong[]> {
   const annId = await getAnnId(anilistId);
-  return await fetchSongsFromAnisongDb(annId);
+  return await fetchSongsFromAnisongDb("opening", annId);
+}
+
+export async function fetchInsertSongs(anilistId: number): Promise<AnimeSong[]> {
+  const annId = await getAnnId(anilistId);
+  return await fetchSongsFromAnisongDb("insert", annId);
+}
+
+export async function fetchEndingSongs(anilistId: number): Promise<AnimeSong[]> {
+  const annId = await getAnnId(anilistId);
+  return await fetchSongsFromAnisongDb("ending", annId);
 }
