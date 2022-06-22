@@ -90,7 +90,10 @@ async function fetchAnilistStaffId(
   id: number,
   names: string[]
 ): Promise<number | null> {
-  const cachedAnilistStaffId = getCachedItem<number | null>("anilistStaffId", id);
+  const cachedAnilistStaffId = getCachedItem<number | null>(
+    "anilistStaffId",
+    id
+  );
   if (cachedAnilistStaffId !== undefined) {
     return cachedAnilistStaffId;
   }
@@ -125,12 +128,7 @@ async function fetchAnilistStaffId(
     }
   }
 
-  addCachedItem<number | null>(
-    "anilistStaffId",
-    id,
-    null,
-    anilistStaffIdTtl
-  )
+  addCachedItem<number | null>("anilistStaffId", id, null, anilistStaffIdTtl);
 }
 
 type AnisongStaff = {
