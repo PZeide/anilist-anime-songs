@@ -1,3 +1,25 @@
+#songsGrid {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+}
+
+#songsGrid div:nth-child(2) {
+  grid-row: span 2;
+}
+
+@media (max-width: 1040px) {
+  #songsGrid {
+    grid-column: 1;
+    grid-template-columns: 1fr;
+  }
+
+  #songsGrid div:nth-child(2) {
+    grid-row: 2;
+  }
+}
+
 .songEntry {
   background: rgb(var(--color-foreground));
   border-radius: 3px;
@@ -23,10 +45,6 @@
 
 .songArtist {
   margin-top: 3px;
-}
-
-.songType {
-  margin-top: 6px;
 }
 
 .songSearchEngines {

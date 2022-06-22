@@ -9,7 +9,7 @@ import {
   fetchInsertSongs,
   fetchEndingSongs,
 } from "./source/anisongdb";
-import { deleteSongsContainers, renderSongs } from "./render";
+import { createSongsGrid, deleteSongsGrid, renderSongs } from "./render";
 
 GM_addStyle(stylesheet);
 
@@ -28,11 +28,11 @@ function addSongs(anilistId: number) {
   runWithContainer((container) => {
     console.log("Container found, adding songs...", container);
 
-    deleteSongsContainers(container);
-
-    renderSongs(container, "Opening", openingSongsPromise);
-    renderSongs(container, "Insert", insertSongsPromise);
-    renderSongs(container, "Ending", endingSongsPromise);
+    deleteSongsGrid(container);
+    const songsGrid = createSongsGrid(container);
+    renderSongs(songsGrid, "Opening", openingSongsPromise);
+    renderSongs(songsGrid, "Insert", insertSongsPromise);
+    renderSongs(songsGrid, "Ending", endingSongsPromise);
   });
 }
 

@@ -6,10 +6,10 @@ function cache(name: string): string {
   return `cache:${name}`;
 }
 
-export function getCachedItem<T>(cacheName: string, id: number): T | null {
+export function getCachedItem<T>(cacheName: string, id: number): T | undefined {
   const data = GM_getValue(cache(cacheName));
   if (data === undefined) {
-    return null;
+    return undefined;
   }
 
   if (Object.prototype.hasOwnProperty.call(data, id)) {
@@ -17,19 +17,19 @@ export function getCachedItem<T>(cacheName: string, id: number): T | null {
     if (item.expires <= unixTime()) {
       delete data[id];
       GM_setValue(cache(cacheName), data);
-      return null;
+      return undefined;
     }
 
     return item.value;
   }
 
-  return null;
+  return undefined;
 }
 
 export function addCachedItem<T>(
   cacheName: string,
   id: number,
-  value: T,
+  value: T | undefined,
   ttl: number
 ): void {
   const expires = unixTime() + ttl;

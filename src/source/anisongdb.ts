@@ -68,7 +68,7 @@ async function fetchAnnidFromMal(malId: number): Promise<number | null> {
 
 async function getAnnId(anilistId: number): Promise<number | null> {
   const cachedAnnId = getCachedItem<number>("annId", anilistId);
-  if (cachedAnnId !== null) {
+  if (cachedAnnId !== undefined) {
     return cachedAnnId;
   }
 
@@ -90,8 +90,8 @@ async function fetchAnilistStaffId(
   id: number,
   names: string[]
 ): Promise<number | null> {
-  const cachedAnilistStaffId = getCachedItem<number>("anilistStaffId", id);
-  if (cachedAnilistStaffId !== null) {
+  const cachedAnilistStaffId = getCachedItem<number | null>("anilistStaffId", id);
+  if (cachedAnilistStaffId !== undefined) {
     return cachedAnilistStaffId;
   }
 
@@ -102,7 +102,7 @@ async function fetchAnilistStaffId(
       }
     }`;
 
-  for (const name in names) {
+  for (const name of names) {
     const variables = { search: name };
     const response = await requestJson(ANILIST_API, {
       method: "POST",
@@ -113,9 +113,9 @@ async function fetchAnilistStaffId(
       data: JSON.stringify({ query, variables }),
     });
 
-    if (response.data.Staff !== undefined) {
+    if (response.data.Staff !== null) {
       const anilistStaffId = response.data.Staff.id;
-      addCachedItem<number>(
+      addCachedItem<number | null>(
         "anilistStaffId",
         id,
         anilistStaffId,
@@ -125,7 +125,12 @@ async function fetchAnilistStaffId(
     }
   }
 
-  return null;
+  addCachedItem<number | null>(
+    "anilistStaffId",
+    id,
+    null,
+    anilistStaffIdTtl
+  )
 }
 
 type AnisongStaff = {
@@ -173,6 +178,7 @@ async function fetchSongsFromAnisongDb(
   }
 
   const songs = [];
+  console.log(annId);
   for (const anisongSong of response) {
     songs.push({
       type: anisongSong.songType.split(" ")[0],

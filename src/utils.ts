@@ -12,7 +12,14 @@ export async function request(
       onabort: () => reject(new Error("The request has been aborted.")),
       onerror: (error) => reject(error),
       ontimeout: () => reject(new Error("The request timed out.")),
-      onload: (response) => resolve(response.responseText),
+      onload: (response) => {
+        if (response.status === 429) {
+          reject(new Error("Too many requests !"));
+          return;
+        }
+
+        resolve(response.responseText);
+      },
       ...options,
     });
   });
@@ -25,9 +32,17 @@ export async function requestJson(
   return JSON.parse(await request(url, options));
 }
 
-export function joinSentence(list: string[]): string {
-  if (list.length < 3) return list.join(" and ");
-  return `${list.slice(0, -1).join(", ")} and ${list.slice(-1)}`;
+export function populateSentece(items: any[]): (any & string)[] {
+  const result = [];
+  for (let i = 0; i < items.length; i++) {
+    result.push(items[i]);
+    if (i < items.length - 2) {
+      result.push(", ");
+    } else if (i === items.length - 2) {
+      result.push(" and ");
+    }
+  }
+  return result;
 }
 
 const emojis = [

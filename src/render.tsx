@@ -1,21 +1,47 @@
+import style from "./style.module.css";
+import NoSongEntries from "./components/no-song-entries";
+import SongEntry from "./components/song-entry";
 import SongsContainer from "./components/songs-container";
+import SongsGrid from "./components/songs-grid";
 
-function createSongsContainer(parentContainer: Element, songType: SongType): Node {
+export function createSongsGrid(parentContainer: Element): Element {
+  const songsGrid = VM.m(<SongsGrid />);
+  parentContainer.appendChild(songsGrid);
+  return document.querySelector(`#${style.songsGrid}`);
+}
+
+export function deleteSongsGrid(parentContainer: Element) {
+  parentContainer.querySelector(`#${style.songsGrid}`)?.remove();
+}
+
+function createSongsContainer(songsGrid: Element, songType: SongType): Element {
   const songsContainer = VM.m(<SongsContainer type={songType} />);
-  parentContainer.appendChild(songsContainer);
-  return parentContainer.querySelector(`#${songType.toLocaleLowerCase()}s`);
+  songsGrid.appendChild(songsContainer);
+  return songsGrid.querySelector(`#${songType.toLocaleLowerCase()}s`);
 }
 
 export function renderSongs(
-  container: Element, 
-  songType: "Opening" | "Insert" | "Ending", 
+  songsGrid: Element,
+  songType: "Opening" | "Insert" | "Ending",
   songsPromise: Promise<AnimeSong[]>
 ) {
-  const songsContainer = createSongsContainer(container, songType);
-}
+  const songsContainer = createSongsContainer(songsGrid, songType);
+  songsPromise.then((songs) => {
+    songsContainer.querySelector(".loading-spinner").remove();
 
-export function deleteSongsContainers(container: Element): void {
-  container.querySelectorAll(".songs-container").forEach(songsContainer => {
-    songsContainer.remove();
+    const toRender = songs
+      .filter((song) => song.type === songType)
+      .sort((a, b) => a.index - b.index);
+
+    if (toRender.length === 0) {
+      songsContainer.appendChild(VM.m(<NoSongEntries />));
+    } else {
+      const entriesContainer = songsContainer.querySelector(
+        ".song-entries-container"
+      );
+      toRender.forEach((song) => {
+        entriesContainer.appendChild(VM.m(<SongEntry song={song} />));
+      });
+    }
   });
 }
