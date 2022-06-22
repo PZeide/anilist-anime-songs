@@ -178,7 +178,6 @@ async function fetchSongsFromAnisongDb(
   }
 
   const songs = [];
-  console.log(annId);
   for (const anisongSong of response) {
     songs.push({
       type: anisongSong.songType.split(" ")[0],
@@ -203,6 +202,9 @@ export async function fetchOpeningsSongs(
   anilistId: number
 ): Promise<AnimeSong[]> {
   const annId = await getAnnId(anilistId);
+  if (annId === null) {
+    return [];
+  }
   return await fetchSongsFromAnisongDb("Opening", annId);
 }
 
@@ -210,6 +212,9 @@ export async function fetchInsertSongs(
   anilistId: number
 ): Promise<AnimeSong[]> {
   const annId = await getAnnId(anilistId);
+  if (annId === null) {
+    return [];
+  }
   return await fetchSongsFromAnisongDb("Insert", annId);
 }
 
@@ -217,5 +222,8 @@ export async function fetchEndingSongs(
   anilistId: number
 ): Promise<AnimeSong[]> {
   const annId = await getAnnId(anilistId);
+  if (annId === null) {
+    return [];
+  }
   return await fetchSongsFromAnisongDb("Ending", annId);
 }

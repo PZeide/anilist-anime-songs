@@ -1,8 +1,8 @@
 import style from "./style.module.css";
-import NoSongEntries from "./components/no-song-entries";
 import SongEntry from "./components/song-entry";
 import SongsContainer from "./components/songs-container";
 import SongsGrid from "./components/songs-grid";
+import ErrorEntry from "./components/error-entry";
 
 export function createSongsGrid(parentContainer: Element): Element {
   const songsGrid = VM.m(<SongsGrid />);
@@ -34,7 +34,7 @@ export function renderSongs(
       .sort((a, b) => a.index - b.index);
 
     if (toRender.length === 0) {
-      songsContainer.appendChild(VM.m(<NoSongEntries />));
+      songsContainer.appendChild(VM.m(<ErrorEntry text="No songs found" />));
     } else {
       const entriesContainer = songsContainer.querySelector(
         ".song-entries-container"
@@ -43,5 +43,8 @@ export function renderSongs(
         entriesContainer.appendChild(VM.m(<SongEntry song={song} />));
       });
     }
+  }).catch(() => {
+    songsContainer.querySelector(".loading-spinner").remove();
+    songsContainer.appendChild(VM.m(<ErrorEntry text="An error occurred" />));
   });
 }
