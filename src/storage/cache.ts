@@ -8,9 +8,7 @@ function cache(name: string): string {
 
 export function getCachedItem<T>(cacheName: string, id: number): T | undefined {
   const data = GM_getValue(cache(cacheName));
-  if (data === undefined) {
-    return undefined;
-  }
+  if (data === undefined) return undefined;
 
   if (Object.prototype.hasOwnProperty.call(data, id)) {
     const item = data[id];

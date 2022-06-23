@@ -14,9 +14,7 @@ export default function SongEntry(props: Properties) {
 
           <div className={style.songArtist}>
             {populateSentece(props.song.artists).map((data) => {
-              if (typeof data === "string") {
-                return <span>{data}</span>;
-              }
+              if (typeof data === "string") return <span>{data}</span>;
 
               if (data.anilistId !== null) {
                 return (

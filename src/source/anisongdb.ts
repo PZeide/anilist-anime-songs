@@ -1,12 +1,12 @@
 import { addCachedItem, getCachedItem } from "../storage/cache";
 import { requestJson } from "../utils";
+import { findAnilistStaff } from "./anilist-staff";
 
 const ANILIST_API = "https://graphql.anilist.co";
 const MAL_API = "https://api.jikan.moe/v4";
 const ANISONGDB_API = "https://anisongdb.com/api";
 
 const annIdTtl = 60 * 60 * 24;
-const anilistStaffIdTtl = 60 * 60 * 24 * 7;
 
 async function fetchMalId(anilistId: number): Promise<number | null> {
   const query = `
@@ -34,7 +34,7 @@ async function fetchMalId(anilistId: number): Promise<number | null> {
   return response.data.Media.idMal;
 }
 
-async function fetchAnnidFromMal(malId: number): Promise<number | null> {
+async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
   const response = await requestJson(`${MAL_API}/anime/${malId}/external`, {
     method: "GET",
     headers: {
@@ -77,7 +77,7 @@ async function getAnnId(anilistId: number): Promise<number | null> {
     return null;
   }
 
-  const annId = await fetchAnnidFromMal(malId);
+  const annId = await fetchAnnIdFromMal(malId);
   if (annId === null) {
     return null;
   }
@@ -85,57 +85,6 @@ async function getAnnId(anilistId: number): Promise<number | null> {
   addCachedItem<number>("annId", anilistId, annId, annIdTtl);
   return annId;
 }
-
-async function fetchAnilistStaffId(
-  id: number,
-  names: string[]
-): Promise<number | null> {
-  const cachedAnilistStaffId = getCachedItem<number | null>(
-    "anilistStaffId",
-    id
-  );
-  if (cachedAnilistStaffId !== undefined) {
-    return cachedAnilistStaffId;
-  }
-
-  const query = `
-    query ($search: String) {
-      Staff (search: $search) {
-        id
-      }
-    }`;
-
-  for (const name of names) {
-    const variables = { search: name };
-    const response = await requestJson(ANILIST_API, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      data: JSON.stringify({ query, variables }),
-    });
-
-    if (response.data.Staff !== null) {
-      const anilistStaffId = response.data.Staff.id;
-      addCachedItem<number | null>(
-        "anilistStaffId",
-        id,
-        anilistStaffId,
-        anilistStaffIdTtl
-      );
-      return response.data.Staff.id;
-    }
-  }
-
-  addCachedItem<number | null>("anilistStaffId", id, null, anilistStaffIdTtl);
-}
-
-type AnisongStaff = {
-  id: number;
-  names: string[];
-  members: AnisongStaff[] | null;
-};
 
 async function fetchSongsFromAnisongDb(
   fetchType: SongType,
@@ -156,19 +105,22 @@ async function fetchSongsFromAnisongDb(
     }),
   });
 
-  async function mapStaffs(
-    anisongStaffs: Array<AnisongStaff>
+  type AnisongStaff = {
+    id: number;
+    names: string[];
+    members: AnisongStaff[];
+  };
+
+  async function formatStaffs(
+    anisongStaffs: AnisongStaff[]
   ): Promise<AnimeSongStaff[]> {
     const staffs = [];
     for (const anisongStaff of anisongStaffs) {
       staffs.push({
         id: anisongStaff.id,
         names: anisongStaff.names,
-        members: await mapStaffs(anisongStaff.members || []),
-        anilistId: await fetchAnilistStaffId(
-          anisongStaff.id,
-          anisongStaff.names
-        ),
+        members: await formatStaffs(anisongStaff.members || []),
+        anilistId: await findAnilistStaff(anisongStaff.id, anisongStaff.names),
       });
     }
 
@@ -186,9 +138,9 @@ async function fetchSongsFromAnisongDb(
         mediumQuality: anisongSong.MQ || null,
         highQuality: anisongSong.HQ || null,
       },
-      artists: await mapStaffs(anisongSong.artists),
-      composers: await mapStaffs(anisongSong.composers),
-      arrangers: await mapStaffs(anisongSong.arrangers),
+      artists: await formatStaffs(anisongSong.artists),
+      composers: await formatStaffs(anisongSong.composers),
+      arrangers: await formatStaffs(anisongSong.arrangers),
       amqDifficulty: anisongSong.songDifficulty,
     });
   }
@@ -196,32 +148,12 @@ async function fetchSongsFromAnisongDb(
   return songs;
 }
 
-export async function fetchOpeningsSongs(
+export async function fetchSongs(
+  fetchType: SongType,
   anilistId: number
 ): Promise<AnimeSong[]> {
   const annId = await getAnnId(anilistId);
-  if (annId === null) {
-    return [];
-  }
-  return await fetchSongsFromAnisongDb("Opening", annId);
-}
+  if (annId === null) return [];
 
-export async function fetchInsertSongs(
-  anilistId: number
-): Promise<AnimeSong[]> {
-  const annId = await getAnnId(anilistId);
-  if (annId === null) {
-    return [];
-  }
-  return await fetchSongsFromAnisongDb("Insert", annId);
-}
-
-export async function fetchEndingSongs(
-  anilistId: number
-): Promise<AnimeSong[]> {
-  const annId = await getAnnId(anilistId);
-  if (annId === null) {
-    return [];
-  }
-  return await fetchSongsFromAnisongDb("Ending", annId);
+  return fetchSongsFromAnisongDb(fetchType, annId);
 }

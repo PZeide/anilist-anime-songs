@@ -4,11 +4,7 @@ import {
   resetContainerInjector,
   runWithContainer,
 } from "./container";
-import {
-  fetchOpeningsSongs,
-  fetchInsertSongs,
-  fetchEndingSongs,
-} from "./source/anisongdb";
+import { fetchSongs } from "./source/anisongdb";
 import { createSongsGrid, deleteSongsGrid, renderSongs } from "./render";
 
 GM_addStyle(stylesheet);
@@ -17,9 +13,9 @@ const animeIdRegex = /anime\/(.+?)\//;
 let animeId: number | null = null;
 
 function addSongs(anilistId: number) {
-  const openingSongsPromise = fetchOpeningsSongs(anilistId);
-  const insertSongsPromise = fetchInsertSongs(anilistId);
-  const endingSongsPromise = fetchEndingSongs(anilistId);
+  const openingSongsPromise = fetchSongs("Opening", anilistId);
+  const insertSongsPromise = fetchSongs("Insert", anilistId);
+  const endingSongsPromise = fetchSongs("Ending", anilistId);
 
   openingSongsPromise.then((songs) => console.log("Opening songs:", songs));
   insertSongsPromise.then((songs) => console.log("Insert songs:", songs));
