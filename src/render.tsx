@@ -20,33 +20,34 @@ function createSongsContainer(songsGrid: Element, songType: SongType): Element {
   return songsGrid.querySelector(`#${songType.toLocaleLowerCase()}s`);
 }
 
-export function renderSongs(
+export async function renderSongs(
   songsGrid: Element,
-  songType: "Opening" | "Insert" | "Ending",
+  songType: SongType,
   songsPromise: Promise<AnimeSong[]>
 ) {
   const songsContainer = createSongsContainer(songsGrid, songType);
-  songsPromise
-    .then((songs) => {
-      songsContainer.querySelector(".loading-spinner").remove();
+  try {
+    const songs = await songsPromise;
+    console.log(`${songType} songs loaded: ${songs.length}`, songs);
+    songsContainer.querySelector(".loading-spinner").remove();
 
-      const toRender = songs
-        .filter((song) => song.type === songType)
-        .sort((a, b) => a.index - b.index);
+    const toRender = songs
+      .filter((song) => song.type === songType)
+      .sort((a, b) => a.index - b.index);
 
-      if (toRender.length === 0) {
-        songsContainer.appendChild(VM.m(<ErrorEntry text="No songs found" />));
-      } else {
-        const entriesContainer = songsContainer.querySelector(
-          ".song-entries-container"
-        );
-        toRender.forEach((song) => {
-          entriesContainer.appendChild(VM.m(<SongEntry song={song} />));
-        });
-      }
-    })
-    .catch(() => {
-      songsContainer.querySelector(".loading-spinner").remove();
-      songsContainer.appendChild(VM.m(<ErrorEntry text="An error occurred" />));
-    });
+    if (toRender.length === 0) {
+      songsContainer.appendChild(VM.m(<ErrorEntry text="No songs found" />));
+    } else {
+      const entriesContainer = songsContainer.querySelector(
+        ".song-entries-container"
+      );
+      toRender.forEach((song) => {
+        entriesContainer.appendChild(VM.m(<SongEntry song={song} />));
+      });
+    }
+  } catch (error) {
+    console.error(`Error loading ${songType} songs`, error);
+    songsContainer.querySelector(".loading-spinner").remove();
+    songsContainer.appendChild(VM.m(<ErrorEntry text="An error occurred" />));
+  }
 }

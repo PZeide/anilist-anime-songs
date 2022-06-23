@@ -13,22 +13,14 @@ const animeIdRegex = /anime\/(.+?)\//;
 let animeId: number | null = null;
 
 function addSongs(anilistId: number) {
-  const openingSongsPromise = fetchSongs("Opening", anilistId);
-  const insertSongsPromise = fetchSongs("Insert", anilistId);
-  const endingSongsPromise = fetchSongs("Ending", anilistId);
-
-  openingSongsPromise.then((songs) => console.log("Opening songs:", songs));
-  insertSongsPromise.then((songs) => console.log("Insert songs:", songs));
-  endingSongsPromise.then((songs) => console.log("Ending songs:", songs));
-
   runWithContainer((container) => {
     console.log("Container found, adding songs...", container);
 
     deleteSongsGrid(container);
     const songsGrid = createSongsGrid(container);
-    renderSongs(songsGrid, "Opening", openingSongsPromise);
-    renderSongs(songsGrid, "Insert", insertSongsPromise);
-    renderSongs(songsGrid, "Ending", endingSongsPromise);
+    renderSongs(songsGrid, "Opening", fetchSongs("Opening", anilistId));
+    renderSongs(songsGrid, "Insert", fetchSongs("Insert", anilistId));
+    renderSongs(songsGrid, "Ending", fetchSongs("Ending", anilistId));
   });
 }
 

@@ -14,7 +14,8 @@ async function fetchMalId(anilistId: number): Promise<number | null> {
       Media (id: $id) {
         idMal
       }
-    }`;
+    }
+  `;
 
   const variables = { id: anilistId };
   const response = await requestJson(ANILIST_API, {
