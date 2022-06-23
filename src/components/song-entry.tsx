@@ -18,12 +18,12 @@ export default function SongEntry(props: Properties) {
 
               if (data.anilistId !== null) {
                 return (
-                  <a href={`https://anilist.co/staff/${data.anilistId}`}>
+                  <a href={`https://anilist.co/staff/${data.anilistId}`} data-id={data.id}>
                     {data.names[0]}
                   </a>
                 );
               } else {
-                return <span>{data.names[0]}</span>;
+                return <span data-id={data.id}>{data.names[0]}</span>;
               }
             })}
           </div>
