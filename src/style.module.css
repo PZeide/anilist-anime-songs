@@ -20,7 +20,17 @@
   }
 }
 
+.errorEntry {
+  background: rgb(var(--color-foreground));
+  border-radius: 3px;
+  display: block;
+  font-size: 1.2rem;
+  padding: 10px;
+  text-align: center;
+}
+
 .songEntry {
+  position: relative;
   background: rgb(var(--color-foreground));
   border-radius: 3px;
   margin-bottom: 15px;
@@ -29,13 +39,8 @@
   font-size: 1.4rem;
 }
 
-.noSongEntries {
-  background: rgb(var(--color-foreground));
-  border-radius: 3px;
-  display: block;
-  font-size: 1.2rem;
-  padding: 10px;
-  text-align: center;
+.songHeader {
+
 }
 
 .songTitle {
@@ -45,6 +50,59 @@
 
 .songArtist {
   margin-top: 3px;
+}
+
+.entryShowMore {
+  display: inline-block;
+  cursor: pointer;
+  margin-top: 9px;
+}
+
+.entryShowMore > span {
+  color: rgb(var(--color-blue));
+}
+
+.entryShowMore > span::after {
+  content: "Show more";
+}
+
+.songInfo {
+  display: none;
+  margin-top: 16px;
+}
+
+.songEntry.expanded .songInfo {
+  display: block;
+}
+
+.songEntry.expanded > .entryShowMore > span::after {
+  content: "Show less";
+}
+
+.songComposersArrangers {
+  margin-top: 3px;
+}
+
+.songComposersArrangers > span:nth-child(1) {
+  font-weight: 500;
+  font-size: 1.4rem;
+}
+
+.songFiles {
+  margin-top: 8px;
+}
+
+.songFile {
+  border-radius: 8px;
+  color: #fff;
+  display: inline-block;
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  margin-right: 8px;
+}
+
+.songFile:hover {
+  color: rgba(26, 27, 28, .6);
 }
 
 .songSearchEngines {

@@ -8,7 +8,7 @@ export default function ErrorEntry(props: Properties) {
   const cryingEmoji = "｡ﾟ･（>﹏<）･ﾟ｡";
   return (
     <>
-      <span className={style.noSongEntries}>
+      <span className={style.errorEntry}>
         {props.text} {cryingEmoji}
       </span>
     </>

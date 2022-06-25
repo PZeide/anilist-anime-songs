@@ -2,30 +2,39 @@ import { addCachedItem, getCachedItem } from "../storage/cache";
 import { requestJson } from "../utils";
 
 const ANILIST_API = "https://graphql.anilist.co";
-const ARTISTS_MAPPINGS_URL = "https://api.npoint.io/2fc4a7889361b8edb8be/artists";
+const ARTISTS_MAPPINGS_URL =
+  "https://api.npoint.io/2fc4a7889361b8edb8be/artists";
 
 const anilistStaffIdTtl = 60 * 60 * 24 * 7;
 
 type StorageMappings = {
   updatedAt: number;
   mappings: Record<number, number | null> | null;
-}
+};
 
 async function fetchArtistsMappings(): Promise<{ [key: number]: number }> {
   return await requestJson(ARTISTS_MAPPINGS_URL);
 }
 
 async function getStaffFromMappings(id: number): Promise<number | null> {
-  const storageMappings = GM_getValue("anilist-staff-mappings") as StorageMappings | undefined;
+  const storageMappings = GM_getValue("anilist-staff-mappings") as
+    | StorageMappings
+    | undefined;
   if (storageMappings === undefined) {
     const mappings = await fetchArtistsMappings();
-    GM_setValue("anilist-staff-mappings", { updatedAt: Date.now(), mappings: mappings });
+    GM_setValue("anilist-staff-mappings", {
+      updatedAt: Date.now(),
+      mappings: mappings,
+    });
     return mappings[id] || null;
   }
 
   if (storageMappings.updatedAt < Date.now() - 30 * 60 * 1000) {
     const mappings = await fetchArtistsMappings();
-    GM_setValue("anilist-staff-mappings", { updatedAt: Date.now(), mappings: mappings });
+    GM_setValue("anilist-staff-mappings", {
+      updatedAt: Date.now(),
+      mappings: mappings,
+    });
     return mappings[id] || null;
   }
 
@@ -103,8 +112,7 @@ export async function findAnilistStaff(
     "anilistStaffId",
     id
   );
-  if (cachedAnilistStaffId !== undefined)
-    return cachedAnilistStaffId;
+  if (cachedAnilistStaffId !== undefined) return cachedAnilistStaffId;
 
   const anilistStaffId = await searchWithNames(names);
   addCachedItem<number | null>(

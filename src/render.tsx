@@ -10,8 +10,8 @@ export function createSongsGrid(parentContainer: Element): Element {
   return document.querySelector(`#${style.songsGrid}`);
 }
 
-export function deleteSongsGrid(parentContainer: Element) {
-  parentContainer.querySelector(`#${style.songsGrid}`)?.remove();
+export function removeSongsGrid() {
+  document.querySelector(`#${style.songsGrid}`)?.remove();
 }
 
 function createSongsContainer(songsGrid: Element, songType: SongType): Element {

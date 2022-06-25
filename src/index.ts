@@ -5,7 +5,12 @@ import {
   runWithContainer,
 } from "./container";
 import { fetchSongs } from "./source/anisongdb";
-import { createSongsGrid, deleteSongsGrid, renderSongs } from "./render";
+import {
+  createSongsGrid,
+  deleteSongsGrid,
+  removeSongsGrid,
+  renderSongs,
+} from "./render";
 
 GM_addStyle(stylesheet);
 
@@ -16,7 +21,6 @@ function addSongs(anilistId: number) {
   runWithContainer((container) => {
     console.log("Container found, adding songs...", container);
 
-    deleteSongsGrid(container);
     const songsGrid = createSongsGrid(container);
     renderSongs(songsGrid, "Opening", fetchSongs("Opening", anilistId));
     renderSongs(songsGrid, "Insert", fetchSongs("Insert", anilistId));
@@ -31,6 +35,7 @@ function onTitleChange() {
     if (newAnimeId === animeId) return;
 
     animeId = newAnimeId;
+    removeSongsGrid();
     resetContainerInjector();
     searchContainer();
     addSongs(newAnimeId);
