@@ -1,7 +1,7 @@
 {
   "name": "anilist-anime-songs",
   "version": "0.0.0",
-  "description": "",
+  "description": "User script to add anime songs information and files on anilist.co",
   "author": "Zeide",
   "license": "MIT",
   "private": true,
