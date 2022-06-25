@@ -39,10 +39,6 @@
   font-size: 1.4rem;
 }
 
-.songHeader {
-
-}
-
 .songTitle {
   font-weight: 500;
   font-size: 1.4rem;
@@ -67,15 +63,17 @@
 }
 
 .songInfo {
-  display: none;
-  margin-top: 16px;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.2s ease-out;
 }
 
 .songEntry.expanded .songInfo {
   display: block;
+  margin-top: 16px;
 }
 
-.songEntry.expanded > .entryShowMore > span::after {
+.songEntry.expanded .entryShowMore > span::after {
   content: "Show less";
 }
 
@@ -101,7 +99,15 @@
   margin-right: 8px;
 }
 
+.songFile:visited {
+  color: #fff;
+}
+
 .songFile:hover {
+  color: rgba(26, 27, 28, .6);
+}
+
+.songFile:hover:visited {
   color: rgba(26, 27, 28, .6);
 }
 

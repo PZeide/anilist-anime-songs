@@ -43,13 +43,22 @@ export default function SongEntry(props: Properties) {
     const entry = (event.target as HTMLElement).closest(`.${style.songEntry}`);
     if (entry === null) return;
 
+    const info = entry.querySelector(`.${style.songInfo}`) as HTMLElement;
+    if (info === null) return;
+
+    if (entry.classList.contains(style.expanded)) {
+      info.style.maxHeight = null;
+    } else {
+      info.style.maxHeight = info.scrollHeight + "px";
+    }
+
     entry.classList.toggle(style.expanded);
   }
 
   return (
     <>
       <div className={style.songEntry}>
-        <div className={style.songHeader}>
+        <div className="song-header">
           <div className={style.songTitle}>{props.song.name}</div>
 
           <div className={style.songArtist}>
