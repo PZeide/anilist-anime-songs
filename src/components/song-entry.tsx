@@ -50,13 +50,15 @@ export default function SongEntry(props: Properties) {
       info.style.maxHeight = null;
       entry.classList.remove(style.expanded);
     } else {
-      for (const other of document.querySelectorAll(`.${style.expanded}`)) {
+      for (const other of document.querySelectorAll(
+        `.${style.songEntry}.${style.expanded}`
+      )) {
         if (other === entry) continue;
 
         const otherInfo = other.querySelector(
           `.${style.songInfo}`
         ) as HTMLElement;
-        otherInfo.style.maxHeight = null;
+        otherInfo.style.maxHeight = "0";
         other.classList.remove(style.expanded);
       }
 

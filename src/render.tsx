@@ -39,7 +39,7 @@ export async function renderSongs(
       songsContainer.appendChild(VM.m(<ErrorEntry text="No songs found" />));
     } else {
       const entriesContainer = songsContainer.querySelector(
-        ".song-entries-container"
+        `.${style.songsEntriesContainer}`
       );
       toRender.forEach((song) => {
         entriesContainer.appendChild(VM.m(<SongEntry song={song} />));

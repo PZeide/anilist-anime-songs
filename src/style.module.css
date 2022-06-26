@@ -20,6 +20,16 @@
   }
 }
 
+.songsContainer > h2 {
+  user-select: none;
+}
+
+.songsEntriesContainer {
+  max-height: 100%;
+  overflow: hidden;
+  transition: all 0.2s ease-out;
+}
+
 .errorEntry {
   background: rgb(var(--color-foreground));
   border-radius: 3px;
@@ -69,7 +79,6 @@
 }
 
 .songEntry.expanded .songInfo {
-  display: block;
   margin-top: 16px;
 }
 
