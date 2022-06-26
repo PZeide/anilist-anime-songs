@@ -48,11 +48,21 @@ export default function SongEntry(props: Properties) {
 
     if (entry.classList.contains(style.expanded)) {
       info.style.maxHeight = null;
+      entry.classList.remove(style.expanded);
     } else {
-      info.style.maxHeight = info.scrollHeight + "px";
-    }
+      for (const other of document.querySelectorAll(`.${style.expanded}`)) {
+        if (other === entry) continue;
 
-    entry.classList.toggle(style.expanded);
+        const otherInfo = other.querySelector(
+          `.${style.songInfo}`
+        ) as HTMLElement;
+        otherInfo.style.maxHeight = null;
+        other.classList.remove(style.expanded);
+      }
+
+      info.style.maxHeight = info.scrollHeight + "px";
+      entry.classList.add(style.expanded);
+    }
   }
 
   return (
