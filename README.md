@@ -1,4 +1,4 @@
-# anilist-db-songs
+# anilist-anime-songs
 
 User script to add anime songs information and files on anilist.co
 
