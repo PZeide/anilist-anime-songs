@@ -5,17 +5,12 @@ import {
   runWithContainer,
 } from "./container";
 import { fetchSongs } from "./source/anisongdb";
-import {
-  createSongsGrid,
-  deleteSongsGrid,
-  removeSongsGrid,
-  renderSongs,
-} from "./render";
+import { createSongsGrid, removeSongsGrid, renderSongs } from "./render";
 
 GM_addStyle(stylesheet);
 
 const animeIdRegex = /anime\/(.+?)\//;
-let animeId: number | null = null;
+let url: string | null = null;
 
 function addSongs(anilistId: number) {
   runWithContainer((container) => {
@@ -28,24 +23,29 @@ function addSongs(anilistId: number) {
   });
 }
 
-function onTitleChange() {
+function onHeadChange() {
+  if (url === location.href) return;
   const match = animeIdRegex.exec(location.href);
-  if (match !== null && match.length > 1) {
-    const newAnimeId = parseInt(match[1]);
-    if (newAnimeId === animeId) return;
+  if (
+    match !== null &&
+    match.length > 1 &&
+    document.querySelector(".overview") !== null
+  ) {
+    const animeId = parseInt(match[1]);
 
-    animeId = newAnimeId;
+    url = location.href;
+
     removeSongsGrid();
     resetContainerInjector();
     searchContainer();
-    addSongs(newAnimeId);
+    addSongs(animeId);
   } else {
     resetContainerInjector();
-    animeId = null;
+    url = null;
   }
 }
 
 VM.observe(document.head, () => {
-  onTitleChange();
+  onHeadChange();
   return false;
 });
