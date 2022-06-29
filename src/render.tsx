@@ -26,6 +26,9 @@ export async function renderSongs(
   songsPromise: Promise<AnimeSong[]>
 ) {
   const songsContainer = createSongsContainer(songsGrid, songType);
+  const entriesContainer = songsContainer.querySelector(
+    `.${style.songsEntriesContainer}`
+  );
   try {
     const songs = await songsPromise;
     console.log(`${songType} songs loaded: ${songs.length}`, songs);
@@ -36,11 +39,8 @@ export async function renderSongs(
       .sort((a, b) => a.index - b.index);
 
     if (toRender.length === 0) {
-      songsContainer.appendChild(VM.m(<ErrorEntry text="No songs found" />));
+      entriesContainer.appendChild(VM.m(<ErrorEntry text="No songs found" />));
     } else {
-      const entriesContainer = songsContainer.querySelector(
-        `.${style.songsEntriesContainer}`
-      );
       toRender.forEach((song) => {
         entriesContainer.appendChild(VM.m(<SongEntry song={song} />));
       });
@@ -48,6 +48,6 @@ export async function renderSongs(
   } catch (error) {
     console.error(`Error loading ${songType} songs`, error);
     songsContainer.querySelector(".loading-spinner").remove();
-    songsContainer.appendChild(VM.m(<ErrorEntry text="An error occurred" />));
+    entriesContainer.appendChild(VM.m(<ErrorEntry text="An error occurred" />));
   }
 }
