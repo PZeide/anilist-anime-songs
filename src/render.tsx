@@ -14,7 +14,7 @@ export function removeSongsGrid() {
   document.querySelector(`#${style.songsGrid}`)?.remove();
 }
 
-function createSongsContainer(songsGrid: Element, songType: SongType): Element {
+export function createSongsContainer(songsGrid: Element, songType: SongType): Element {
   const songsContainer = VM.m(<SongsContainer type={songType} />);
   songsGrid.appendChild(songsContainer);
   return songsGrid.querySelector(`#${songType.toLocaleLowerCase()}s`);
@@ -23,15 +23,15 @@ function createSongsContainer(songsGrid: Element, songType: SongType): Element {
 export async function renderSongs(
   songsGrid: Element,
   songType: SongType,
-  songsPromise: Promise<AnimeSong[]>
+  songs: AnimeSong[]
 ) {
-  const songsContainer = createSongsContainer(songsGrid, songType);
+  const songsContainer = songsGrid.querySelector(`#${songType.toLocaleLowerCase()}s`);
   const entriesContainer = songsContainer.querySelector(
     `.${style.songsEntriesContainer}`
   );
+
   try {
-    const songs = await songsPromise;
-    console.log(`${songType} songs loaded: ${songs.length}`, songs);
+    console.log(`Rendering ${songType} songs: ${songs.length}`, songs);
     songsContainer.querySelector(".loading-spinner").remove();
 
     const toRender = songs

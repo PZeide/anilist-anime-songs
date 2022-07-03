@@ -5,7 +5,7 @@ import {
   runWithContainer,
 } from "./container";
 import { fetchSongs } from "./source/anisongdb";
-import { createSongsGrid, removeSongsGrid, renderSongs } from "./render";
+import { createSongsContainer, createSongsGrid, removeSongsGrid, renderSongs } from "./render";
 
 GM_addStyle(stylesheet);
 
@@ -13,13 +13,17 @@ const animeIdRegex = /anime\/(.+?)\//;
 let url: string | null = null;
 
 function addSongs(anilistId: number) {
-  runWithContainer((container) => {
+  runWithContainer(async (container) => {
     console.log("Container found, adding songs...", container);
-
+    
     const songsGrid = createSongsGrid(container);
-    renderSongs(songsGrid, "Opening", fetchSongs("Opening", anilistId));
-    renderSongs(songsGrid, "Insert", fetchSongs("Insert", anilistId));
-    renderSongs(songsGrid, "Ending", fetchSongs("Ending", anilistId));
+    createSongsContainer(songsGrid, "Opening");
+    createSongsContainer(songsGrid, "Insert");
+    createSongsContainer(songsGrid, "Ending");
+
+    renderSongs(songsGrid, "Opening", await fetchSongs("Opening", anilistId));
+    renderSongs(songsGrid, "Insert", await fetchSongs("Insert", anilistId));
+    renderSongs(songsGrid, "Ending", await fetchSongs("Ending", anilistId));
   });
 }
 
