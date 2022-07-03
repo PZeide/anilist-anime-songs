@@ -6,6 +6,7 @@ const ARTISTS_MAPPINGS_URL =
   "https://api.npoint.io/2fc4a7889361b8edb8be/artists";
 
 const anilistStaffIdTtl = 60 * 60 * 24 * 7;
+const anilistStaffIdNullTtl = 60 * 60 * 24 * 2;
 
 type StorageMappings = {
   updatedAt: number;
@@ -125,9 +126,16 @@ export async function findAnilistStaff(
         anilistStaffId,
         anilistStaffIdTtl
       );
+
       return anilistStaffId;
     }
   }
 
+  addCachedItem<number | null>(
+    "anilistStaffId",
+    id,
+    null,
+    anilistStaffIdNullTtl
+  );
   return null;
 }
