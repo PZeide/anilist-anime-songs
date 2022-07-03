@@ -2,7 +2,7 @@ import style from "../style.module.css";
 import { populateSentece, request } from "../utils";
 
 const REPORT_STAFF_URL =
-  "aHR0cHM6Ly9jYW5hcnkuZGlzY29yZC5jb20vYXBpL3dlYmhvb2tzLzk5MzE3NjkyMDAwOTIyNDI3My9oNERGbU9JRGNfbzZQYjRfcTV6QWI3ZE1pb19NUk16TloybDU5TWRRMm1ma3NLc25YQzR2bGQ4Q1NlLUZOOEJ0UzBQUg==";
+  "https://maker.ifttt.com/trigger/staff_mappings_report/with/key/ouuC58ABvq49sXEngMUaNqg0FZn7oFM8pnY4cPUqRKz";
 
 type Properties = {
   song: AnimeSong;
@@ -10,20 +10,12 @@ type Properties = {
 
 function reportStaff(staff: AnimeSongStaff) {
   const data = {
-    content: null,
-    embeds: [
-      {
-        title: "Mappings Report",
-        description: `AnisongDB ID: ${staff.id}
-        Anilist ID (actual mapping): ${staff.anilistId}
-        
-        Staff names: ${populateSentece(staff.names).join("")}`,
-        color: 15280160,
-      },
-    ],
+    value1: staff.id.toString(),
+    value2: staff.anilistId?.toString() || "null",
+    value3: populateSentece(staff.names).join(""),
   };
 
-  request(atob(REPORT_STAFF_URL), {
+  request(REPORT_STAFF_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
