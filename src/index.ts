@@ -5,7 +5,12 @@ import {
   runWithContainer,
 } from "./container";
 import { fetchSongs } from "./source/anisongdb";
-import { createSongsContainer, createSongsGrid, removeSongsGrid, renderSongs } from "./render";
+import {
+  createSongsContainer,
+  createSongsGrid,
+  removeSongsGrid,
+  renderSongs,
+} from "./render";
 
 GM_addStyle(stylesheet);
 
@@ -15,7 +20,7 @@ let url: string | null = null;
 function addSongs(anilistId: number) {
   runWithContainer(async (container) => {
     console.log("Container found, adding songs...", container);
-    
+
     const songsGrid = createSongsGrid(container);
     createSongsContainer(songsGrid, "Opening");
     createSongsContainer(songsGrid, "Insert");

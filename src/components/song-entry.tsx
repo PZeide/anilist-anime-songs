@@ -1,11 +1,50 @@
 import style from "../style.module.css";
-import { populateSentece } from "../utils";
+import { populateSentece, request } from "../utils";
+
+// Please don't use this to spam anything else :(
+const REPORT_STAFF_WEBHOOK =
+  "https://canary.discord.com/api/webhooks/993176920009224273/h4DFmOIDc_o6Pb4_q5zAb7dMio_MRMzNZ2l59MdQ2mfksKsnXC4vld8CSe-FN8BtS0PR";
 
 type Properties = {
   song: AnimeSong;
 };
 
+function reportStaff(staff: AnimeSongStaff) {
+  const data = {
+    content: null,
+    embeds: [
+      {
+        title: "Mappings Report",
+        description: `AnisongDB ID: ${staff.id}
+        Anilist ID (actual mapping): ${staff.anilistId}
+        
+        Staff names: ${populateSentece(staff.names).join("")}`,
+        color: 15280160,
+      },
+    ],
+  };
+
+  request(REPORT_STAFF_WEBHOOK, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    data: JSON.stringify(data),
+  });
+}
+
 function formatStaffs(staffs: AnimeSongStaff[]) {
+  function onStaffClick(event: MouseEvent, staff: AnimeSongStaff) {
+    if (event.altKey && event.button === 0) {
+      console.log(`Reporting staff ${staff.id}`);
+      reportStaff(staff);
+      const element = event.target as HTMLElement;
+      element.style.cssText = "color: #bc4349 !important;";
+      event.preventDefault();
+    }
+  }
+
   return populateSentece(staffs).map((data) => {
     if (typeof data === "string") return <span>{data}</span>;
 
@@ -14,12 +53,20 @@ function formatStaffs(staffs: AnimeSongStaff[]) {
         <a
           href={`https://anilist.co/staff/${data.anilistId}`}
           data-id={data.id}
+          onclick={(e: MouseEvent) => onStaffClick(e, data)}
         >
           {data.names[0]}
         </a>
       );
     } else {
-      return <span data-id={data.id}>{data.names[0]}</span>;
+      return (
+        <span
+          data-id={data.id}
+          onclick={(e: MouseEvent) => onStaffClick(e, data)}
+        >
+          {data.names[0]}
+        </span>
+      );
     }
   });
 }
