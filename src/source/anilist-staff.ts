@@ -42,6 +42,7 @@ async function getStaffFromMappings(id: number): Promise<number | null> {
 }
 
 async function searchWithNames(
+  searchName: string,
   names: string[],
   page = 1
 ): Promise<number | null> {
@@ -65,7 +66,7 @@ async function searchWithNames(
 
   const variables = {
     page: page,
-    search: names[0],
+    search: searchName,
   };
 
   const response = await requestJson(ANILIST_API, {
@@ -95,7 +96,7 @@ async function searchWithNames(
   }
 
   if (response.data.Page.pageInfo.hasNextPage) {
-    return searchWithNames(names, page + 1);
+    return searchWithNames(searchName, names, page + 1);
   } else {
     return null;
   }
@@ -114,12 +115,19 @@ export async function findAnilistStaff(
   );
   if (cachedAnilistStaffId !== undefined) return cachedAnilistStaffId;
 
-  const anilistStaffId = await searchWithNames(names);
-  addCachedItem<number | null>(
-    "anilistStaffId",
-    id,
-    anilistStaffId,
-    anilistStaffIdTtl
-  );
-  return anilistStaffId;
+  for (const name of names) {
+    console.log("Searching for staff with name", name);
+    const anilistStaffId = await searchWithNames(name, names);
+    if (anilistStaffId !== null) {
+      addCachedItem<number | null>(
+        "anilistStaffId",
+        id,
+        anilistStaffId,
+        anilistStaffIdTtl
+      );
+      return anilistStaffId;
+    }
+  }
+
+  return null;
 }
