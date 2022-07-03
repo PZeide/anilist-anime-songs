@@ -1,9 +1,8 @@
 import style from "../style.module.css";
 import { populateSentece, request } from "../utils";
 
-// Please don't use this to spam anything else :(
-const REPORT_STAFF_WEBHOOK =
-  "https://canary.discord.com/api/webhooks/993176920009224273/h4DFmOIDc_o6Pb4_q5zAb7dMio_MRMzNZ2l59MdQ2mfksKsnXC4vld8CSe-FN8BtS0PR";
+const REPORT_STAFF_URL =
+  "aHR0cHM6Ly9jYW5hcnkuZGlzY29yZC5jb20vYXBpL3dlYmhvb2tzLzk5MzE3NjkyMDAwOTIyNDI3My9oNERGbU9JRGNfbzZQYjRfcTV6QWI3ZE1pb19NUk16TloybDU5TWRRMm1ma3NLc25YQzR2bGQ4Q1NlLUZOOEJ0UzBQUg==";
 
 type Properties = {
   song: AnimeSong;
@@ -23,8 +22,8 @@ function reportStaff(staff: AnimeSongStaff) {
       },
     ],
   };
-
-  request(REPORT_STAFF_WEBHOOK, {
+console.log(atob(REPORT_STAFF_URL));
+  request(atob(REPORT_STAFF_URL), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
