@@ -22,7 +22,7 @@ function reportStaff(staff: AnimeSongStaff) {
       },
     ],
   };
-console.log(atob(REPORT_STAFF_URL));
+
   request(atob(REPORT_STAFF_URL), {
     method: "POST",
     headers: {
