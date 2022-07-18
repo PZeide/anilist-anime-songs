@@ -29,7 +29,12 @@ export async function requestJson(
   url: string,
   options: Partial<Tampermonkey.Request> = {}
 ): Promise<any> {
-  return JSON.parse(await request(url, options));
+  const response = await request(url, options);
+  try {
+    return JSON.parse(response);
+  } catch (error) {
+    throw new Error(`Invalid JSON response: ${response}`);
+  }
 }
 
 export function populateSentece(items: any[]): (any & string)[] {
