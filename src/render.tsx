@@ -35,24 +35,30 @@ export async function renderSongs(
     `.${style.songsEntriesContainer}`
   );
 
-  try {
-    console.log(`Rendering ${songType} songs: ${songs.length}`, songs);
-    songsContainer.querySelector(".loading-spinner").remove();
+  console.log(`Rendering ${songType} songs: ${songs.length}`, songs);
+  songsContainer.querySelector(".loading-spinner").remove();
 
-    const toRender = songs
-      .filter((song) => song.type === songType)
-      .sort((a, b) => a.index - b.index);
+  const toRender = songs
+    .filter((song) => song.type === songType)
+    .sort((a, b) => a.index - b.index);
 
-    if (toRender.length === 0) {
-      entriesContainer.appendChild(VM.m(<ErrorEntry text="No songs found" />));
-    } else {
-      toRender.forEach((song) => {
-        entriesContainer.appendChild(VM.m(<SongEntry song={song} />));
-      });
-    }
-  } catch (error) {
-    console.error(`Error loading ${songType} songs`, error);
-    songsContainer.querySelector(".loading-spinner").remove();
-    entriesContainer.appendChild(VM.m(<ErrorEntry text="An error occurred" />));
+  if (toRender.length === 0) {
+    entriesContainer.appendChild(VM.m(<ErrorEntry text="No songs found" />));
+  } else {
+    toRender.forEach((song) => {
+      entriesContainer.appendChild(VM.m(<SongEntry song={song} />));
+    });
   }
+}
+
+export function setContainersError(songsGrid: Element, songType: SongType) {
+  const songsContainer = songsGrid.querySelector(
+    `#${songType.toLocaleLowerCase()}s`
+  );
+  const entriesContainer = songsContainer.querySelector(
+    `.${style.songsEntriesContainer}`
+  );
+
+  songsContainer.querySelector(".loading-spinner").remove();
+  entriesContainer.appendChild(VM.m(<ErrorEntry text="An error occurred" />));
 }

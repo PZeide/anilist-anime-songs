@@ -10,6 +10,7 @@ import {
   createSongsGrid,
   removeSongsGrid,
   renderSongs,
+  setContainersError,
 } from "./render";
 
 import "@violentmonkey/dom";
@@ -34,9 +35,18 @@ function addSongs(anilistId: number) {
     createSongsContainer(songsGrid, "Insert");
     createSongsContainer(songsGrid, "Ending");
 
-    renderSongs(songsGrid, "Opening", await fetchSongs("Opening", anilistId));
-    renderSongs(songsGrid, "Insert", await fetchSongs("Insert", anilistId));
-    renderSongs(songsGrid, "Ending", await fetchSongs("Ending", anilistId));
+    async function tryRenderSongs(type: SongType) {
+      try {
+        renderSongs(songsGrid, type, await fetchSongs(type, anilistId));
+      } catch (e) {
+        console.error(`Error loading ${type} songs`, e);
+        setContainersError(songsGrid, type);
+      }
+    }
+
+    tryRenderSongs("Opening");
+    tryRenderSongs("Insert");
+    tryRenderSongs("Ending");
   });
 }
 
