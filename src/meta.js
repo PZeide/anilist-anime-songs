@@ -6,6 +6,14 @@
 // @grant       GM_addStyle
 // @version     process.env.VERSION
 // @author      process.env.AUTHOR
+// @connect     graphql.anilist.co
+// @connect     api.jikan.moe
+// @connect     api.npoint.io
+// @connect     anisongdb.com
+// @connect     maker.ifttt.com
+// @updateURL   https://github.com/PZeide/anilist-anime-songs/releases/latest/download/anilist-anime-songs.user.js
+// @downloadURL https://github.com/PZeide/anilist-anime-songs/releases/latest/download/anilist-anime-songs.user.js
+// @supportURL  https://github.com/PZeide/anilist-anime-songs/issues
 // ==/UserScript==
 
 /**
