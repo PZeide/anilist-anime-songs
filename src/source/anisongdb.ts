@@ -3,6 +3,7 @@ import {
   ANN_ANIME_ID_CACHE,
   getCachedItem,
 } from "../storage/cache";
+import { getMappings } from "../storage/mappings";
 import { requestJson } from "../utils";
 import { findAnilistStaff } from "./anilist-staff";
 
@@ -72,20 +73,17 @@ async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
 }
 
 async function getAnnId(anilistId: number): Promise<number | null> {
+  const mappings = await getMappings();
+  if (mappings.annIds[anilistId] !== undefined) return mappings.annIds[anilistId];
+
   const cachedAnnId = getCachedItem<number>(ANN_ANIME_ID_CACHE, anilistId);
-  if (cachedAnnId !== undefined) {
-    return cachedAnnId;
-  }
+  if (cachedAnnId !== undefined) return cachedAnnId;
 
   const malId = await fetchMalId(anilistId);
-  if (malId === null) {
-    return null;
-  }
+  if (malId === null) return null;
 
   const annId = await fetchAnnIdFromMal(malId);
-  if (annId === null) {
-    return null;
-  }
+  if (annId === null) return null;
 
   addCachedItem<number>(ANN_ANIME_ID_CACHE, anilistId, annId, ANN_ANIME_ID_TTL);
   return annId;
