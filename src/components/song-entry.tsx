@@ -121,16 +121,23 @@ export default function SongEntry(props: Properties) {
         </div>
         <div className={style.songInfo}>
           {props.song.composers.length > 0 && (
-            <div className={style.songComposersArrangers}>
+            <div className={style.songInfoEntry}>
               <span>Composers: </span>
               {formatStaffs(props.song.composers)}
             </div>
           )}
 
           {props.song.arrangers.length > 0 && (
-            <div className={style.songComposersArrangers}>
+            <div className={style.songInfoEntry}>
               <span>Arrangers: </span>
               {formatStaffs(props.song.arrangers)}
+            </div>
+          )}
+
+          {props.song.amqDifficulty && (
+            <div className={style.songInfoEntry}>
+              <span>AMQ difficulty: </span>
+              {props.song.amqDifficulty}%
             </div>
           )}
 

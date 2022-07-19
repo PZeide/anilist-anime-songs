@@ -9,7 +9,7 @@ declare interface AnimeSong {
   artists: AnimeSongStaff[];
   composers: AnimeSongStaff[];
   arrangers: AnimeSongStaff[];
-  amqDifficulty: number;
+  amqDifficulty: number | null;
 }
 
 declare interface AnimeSongFiles {

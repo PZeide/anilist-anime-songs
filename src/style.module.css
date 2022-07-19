@@ -86,11 +86,11 @@
   content: "Show less";
 }
 
-.songComposersArrangers {
+.songInfoEntry {
   margin-top: 3px;
 }
 
-.songComposersArrangers > span:nth-child(1) {
+.songInfoEntry > span:nth-child(1) {
   font-weight: 500;
   font-size: 1.4rem;
 }
