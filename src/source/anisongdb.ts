@@ -1,4 +1,8 @@
-import { addCachedItem, getCachedItem } from "../storage/cache";
+import {
+  addCachedItem,
+  ANN_ANIME_ID_CACHE,
+  getCachedItem,
+} from "../storage/cache";
 import { requestJson } from "../utils";
 import { findAnilistStaff } from "./anilist-staff";
 
@@ -6,7 +10,7 @@ const ANILIST_API = "https://graphql.anilist.co";
 const MAL_API = "https://api.jikan.moe/v4";
 const ANISONGDB_API = "https://anisongdb.com/api";
 
-const annIdTtl = 60 * 60 * 24;
+const ANN_ANIME_ID_TTL = 60 * 60 * 24;
 
 async function fetchMalId(anilistId: number): Promise<number | null> {
   const query = `
@@ -68,7 +72,7 @@ async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
 }
 
 async function getAnnId(anilistId: number): Promise<number | null> {
-  const cachedAnnId = getCachedItem<number>("annId", anilistId);
+  const cachedAnnId = getCachedItem<number>(ANN_ANIME_ID_CACHE, anilistId);
   if (cachedAnnId !== undefined) {
     return cachedAnnId;
   }
@@ -83,7 +87,7 @@ async function getAnnId(anilistId: number): Promise<number | null> {
     return null;
   }
 
-  addCachedItem<number>("annId", anilistId, annId, annIdTtl);
+  addCachedItem<number>(ANN_ANIME_ID_CACHE, anilistId, annId, ANN_ANIME_ID_TTL);
   return annId;
 }
 

@@ -1,12 +1,17 @@
-import { addCachedItem, getCachedItem } from "../storage/cache";
+import {
+  addCachedItem,
+  ANILIST_STAFF_ID_CACHE,
+  getCachedItem,
+} from "../storage/cache";
 import { requestJson } from "../utils";
 
 const ANILIST_API = "https://graphql.anilist.co";
-const ARTISTS_MAPPINGS_URL =
-  "https://api.npoint.io/2fc4a7889361b8edb8be/artists";
 
-const anilistStaffIdTtl = 60 * 60 * 24 * 7;
-const anilistStaffIdNullTtl = 60 * 60 * 24 * 2;
+const STAFF_MAPPINGS_STORAGE = "remote-staff-mappings";
+const STAFF_MAPPINGS_URL = "https://api.npoint.io/2fc4a7889361b8edb8be/staffs";
+
+const ANILIST_STAFF_ID_TTL = 60 * 60 * 24 * 7;
+const ANILIST_STAFF_NULL_ID_TTL = 60 * 60 * 24 * 2;
 
 type StorageMappings = {
   updatedAt: number;
@@ -14,16 +19,16 @@ type StorageMappings = {
 };
 
 async function fetchArtistsMappings(): Promise<{ [key: number]: number }> {
-  return await requestJson(ARTISTS_MAPPINGS_URL);
+  return await requestJson(STAFF_MAPPINGS_URL);
 }
 
 async function getStaffFromMappings(id: number): Promise<number | null> {
-  const storageMappings = GM_getValue("anilist-staff-mappings") as
+  const storageMappings = GM_getValue(STAFF_MAPPINGS_STORAGE) as
     | StorageMappings
     | undefined;
   if (storageMappings === undefined) {
     const mappings = await fetchArtistsMappings();
-    GM_setValue("anilist-staff-mappings", {
+    GM_setValue(STAFF_MAPPINGS_STORAGE, {
       updatedAt: Date.now(),
       mappings: mappings,
     });
@@ -32,7 +37,7 @@ async function getStaffFromMappings(id: number): Promise<number | null> {
 
   if (storageMappings.updatedAt < Date.now() - 30 * 60 * 1000) {
     const mappings = await fetchArtistsMappings();
-    GM_setValue("anilist-staff-mappings", {
+    GM_setValue(STAFF_MAPPINGS_STORAGE, {
       updatedAt: Date.now(),
       mappings: mappings,
     });
@@ -111,7 +116,7 @@ export async function findAnilistStaff(
   if (mappingsArtist !== null) return mappingsArtist;
 
   const cachedAnilistStaffId = getCachedItem<number | null>(
-    "anilistStaffId",
+    ANILIST_STAFF_ID_CACHE,
     id
   );
   if (cachedAnilistStaffId !== undefined) return cachedAnilistStaffId;
@@ -121,10 +126,10 @@ export async function findAnilistStaff(
     const anilistStaffId = await searchWithNames(name, names);
     if (anilistStaffId !== null) {
       addCachedItem<number | null>(
-        "anilistStaffId",
+        ANILIST_STAFF_ID_CACHE,
         id,
         anilistStaffId,
-        anilistStaffIdTtl
+        ANILIST_STAFF_ID_TTL
       );
 
       return anilistStaffId;
@@ -132,10 +137,10 @@ export async function findAnilistStaff(
   }
 
   addCachedItem<number | null>(
-    "anilistStaffId",
+    ANILIST_STAFF_ID_CACHE,
     id,
     null,
-    anilistStaffIdNullTtl
+    ANILIST_STAFF_NULL_ID_TTL
   );
   return null;
 }

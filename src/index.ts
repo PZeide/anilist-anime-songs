@@ -14,6 +14,11 @@ import {
 
 import "@violentmonkey/dom";
 import "@violentmonkey/ui";
+import {
+  ANILIST_STAFF_ID_CACHE,
+  ANN_ANIME_ID_CACHE,
+  garbageCollectCache,
+} from "./storage/cache";
 
 GM_addStyle(stylesheet);
 
@@ -56,6 +61,10 @@ function onHeadChange() {
     url = null;
   }
 }
+
+// Cache garbage collection
+garbageCollectCache(ANN_ANIME_ID_CACHE);
+garbageCollectCache(ANILIST_STAFF_ID_CACHE);
 
 VM.observe(document.head, () => {
   onHeadChange();
