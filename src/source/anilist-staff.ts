@@ -19,7 +19,11 @@ type StorageMappings = {
 };
 
 async function fetchArtistsMappings(): Promise<{ [key: number]: number }> {
-  return await requestJson(STAFF_MAPPINGS_URL);
+  try {
+    return await requestJson(STAFF_MAPPINGS_URL);
+  } catch (e) {
+    return {};
+  }
 }
 
 async function getStaffFromMappings(id: number): Promise<number | null> {
