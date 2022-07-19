@@ -12,6 +12,9 @@ import {
   renderSongs,
 } from "./render";
 
+import "@violentmonkey/dom";
+import "@violentmonkey/ui";
+
 GM_addStyle(stylesheet);
 
 const animeIdRegex = /anime\/(.+?)\//;
