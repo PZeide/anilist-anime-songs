@@ -44,9 +44,9 @@ function addSongs(anilistId: number) {
       }
     }
 
-    tryRenderSongs("Opening");
-    tryRenderSongs("Insert");
-    tryRenderSongs("Ending");
+    await tryRenderSongs("Opening");
+    await tryRenderSongs("Insert");
+    await tryRenderSongs("Ending");
   });
 }
 
