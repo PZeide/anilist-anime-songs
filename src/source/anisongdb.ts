@@ -74,7 +74,8 @@ async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
 
 async function getAnnId(anilistId: number): Promise<number | null> {
   const mappings = await getMappings();
-  if (mappings.annIds[anilistId] !== undefined) return mappings.annIds[anilistId];
+  if (mappings.annIds[anilistId] !== undefined)
+    return mappings.annIds[anilistId];
 
   const cachedAnnId = getCachedItem<number>(ANN_ANIME_ID_CACHE, anilistId);
   if (cachedAnnId !== undefined) return cachedAnnId;

@@ -1,7 +1,8 @@
 import { requestJson } from "../utils";
 
 const MAPPINGS_STORAGE = "remote-mappings";
-const MAPPINGS_URL = "https://anilist-anime-songs-mappings-default-rtdb.europe-west1.firebasedatabase.app/.json";
+const MAPPINGS_URL =
+  "https://anilist-anime-songs-mappings-default-rtdb.europe-west1.firebasedatabase.app/.json";
 const MAPPINGS_TTL = 30 * 60 * 1000;
 
 type RemoteMappings = {
@@ -11,7 +12,7 @@ type RemoteMappings = {
 };
 
 async function fetchMappings(): Promise<RemoteMappings> {
-  console.log("Fetching remote mappings !")
+  console.log("Fetching remote mappings !");
   try {
     return {
       updatedAt: Date.now(),
