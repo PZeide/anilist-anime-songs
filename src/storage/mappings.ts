@@ -1,4 +1,4 @@
-import { requestJson } from "../utils";
+import { requestJson } from "../network";
 
 const MAPPINGS_STORAGE = "remote-mappings";
 const MAPPINGS_URL =

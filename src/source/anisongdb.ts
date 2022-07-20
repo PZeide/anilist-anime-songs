@@ -4,7 +4,7 @@ import {
   getCachedItem,
 } from "../storage/cache";
 import { getMappings } from "../storage/mappings";
-import { requestJson } from "../utils";
+import { requestJson } from "../network";
 import { findAnilistStaff } from "./anilist-staff";
 
 const ANILIST_API = "https://graphql.anilist.co";

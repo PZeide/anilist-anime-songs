@@ -12,14 +12,15 @@ import {
   renderSongs,
   setContainersError,
 } from "./render";
-
-import "@violentmonkey/dom";
-import "@violentmonkey/ui";
 import {
   ANILIST_STAFF_ID_CACHE,
   ANN_ANIME_ID_CACHE,
   garbageCollectCache,
 } from "./storage/cache";
+
+import "@violentmonkey/dom";
+import "@violentmonkey/ui";
+import { startNetworkProfiling, stopNetworkProfiling } from "./network";
 
 GM_addStyle(stylesheet);
 
@@ -30,6 +31,7 @@ function addSongs(anilistId: number) {
   runWithContainer(async (container) => {
     console.log("Container found, adding songs...", container);
 
+    startNetworkProfiling();
     const songsGrid = createSongsGrid(container);
     createSongsContainer(songsGrid, "Opening");
     createSongsContainer(songsGrid, "Insert");
@@ -47,6 +49,7 @@ function addSongs(anilistId: number) {
     await tryRenderSongs("Opening");
     await tryRenderSongs("Insert");
     await tryRenderSongs("Ending");
+    stopNetworkProfiling();
   });
 }
 

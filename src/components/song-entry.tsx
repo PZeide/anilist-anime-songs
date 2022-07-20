@@ -1,5 +1,6 @@
 import style from "../style.module.css";
-import { populateSentece, request } from "../utils";
+import { populateSentece } from "../utils";
+import { request } from "../network";
 
 const REPORT_STAFF_URL =
   "https://maker.ifttt.com/trigger/staff_mappings_report/with/key/ouuC58ABvq49sXEngMUaNqg0FZn7oFM8pnY4cPUqRKz";
