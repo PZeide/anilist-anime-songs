@@ -4,12 +4,14 @@ import {
   getCachedItem,
 } from "../storage/cache";
 import { getMappings } from "../storage/mappings";
-import { requestJson } from "../network";
+import { rawRequest } from "../network";
 
 const ANILIST_API = "https://graphql.anilist.co";
 
 const ANILIST_STAFF_ID_TTL = 60 * 60 * 24 * 7;
 const ANILIST_STAFF_NULL_ID_TTL = 60 * 60 * 24 * 2;
+
+let requestLimitReached = false;
 
 async function searchWithNames(
   searchName: string,
@@ -39,7 +41,7 @@ async function searchWithNames(
     search: searchName,
   };
 
-  const response = await requestJson(ANILIST_API, {
+  const response = await rawRequest(ANILIST_API, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -48,10 +50,12 @@ async function searchWithNames(
     data: JSON.stringify({ query, variables }),
   });
 
-  if (response.data.Page === undefined) return null;
+  const result = JSON.parse(response.responseText);
+
+  if (result.data.Page === undefined) return null;
 
   const caseInsensitiveNames = names.map((name) => name.toLowerCase());
-  for (const staff of response.data.Page.staff) {
+  for (const staff of result.data.Page.staff) {
     // Check if any of the names match the full name
     if (caseInsensitiveNames.includes(staff.name.full.toLowerCase())) {
       return staff.id;
@@ -65,7 +69,19 @@ async function searchWithNames(
     }
   }
 
-  if (response.data.Page.pageInfo.hasNextPage) {
+  const headersArray = response.responseHeaders.trim().split(/[\r\n]+/);
+  const xRateLimitRemaining = headersArray.find(
+    (header: string) => header.startsWith("x-ratelimit-remaining:")
+  );
+  if (xRateLimitRemaining !== undefined) {
+    const remaining = parseInt(xRateLimitRemaining.split(":")[1].trim());
+    if (remaining < 30) {
+      requestLimitReached = true;
+      throw new Error("Staff search request limit reached");
+    }
+  }
+
+  if (result.data.Page.pageInfo.hasNextPage) {
     return searchWithNames(searchName, names, page + 1);
   } else {
     return null;
@@ -84,6 +100,7 @@ export async function findAnilistStaff(
     id
   );
   if (cachedAnilistStaffId !== undefined) return cachedAnilistStaffId;
+  if (requestLimitReached) throw new Error("Staff search request limit reached");
 
   for (const name of names) {
     console.log("Searching for staff with name", name);
@@ -107,4 +124,8 @@ export async function findAnilistStaff(
     ANILIST_STAFF_NULL_ID_TTL
   );
   return null;
+}
+
+export function resetLimitIndicator() {
+  requestLimitReached = false;
 }

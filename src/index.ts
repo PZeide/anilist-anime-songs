@@ -17,10 +17,11 @@ import {
   ANN_ANIME_ID_CACHE,
   garbageCollectCache,
 } from "./storage/cache";
+import { startNetworkProfiling, stopNetworkProfiling } from "./network";
 
 import "@violentmonkey/dom";
 import "@violentmonkey/ui";
-import { startNetworkProfiling, stopNetworkProfiling } from "./network";
+import { resetLimitIndicator } from "./source/anilist-staff";
 
 GM_addStyle(stylesheet);
 
@@ -50,6 +51,7 @@ function addSongs(anilistId: number) {
     await tryRenderSongs("Insert");
     await tryRenderSongs("Ending");
     stopNetworkProfiling();
+    resetLimitIndicator();
   });
 }
 

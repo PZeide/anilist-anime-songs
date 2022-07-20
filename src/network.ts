@@ -10,10 +10,10 @@ export function stopNetworkProfiling() {
   profilingData = null;
 }
 
-export async function request(
+export async function rawRequest(
   url: string,
   options: Partial<Tampermonkey.Request> = {}
-): Promise<string> {
+): Promise<Tampermonkey.Response<object>> {
   return new Promise((resolve, reject) => {
     if (profilingData !== null) {
       const domain = new URL(url).hostname;
@@ -33,7 +33,7 @@ export async function request(
           return;
         }
 
-        resolve(response.responseText);
+        resolve(response);
       },
       ...options,
     });
@@ -44,9 +44,9 @@ export async function requestJson(
   url: string,
   options: Partial<Tampermonkey.Request> = {}
 ): Promise<any> {
-  const response = await request(url, options);
+  const response = await rawRequest(url, options);
   try {
-    return JSON.parse(response);
+    return JSON.parse(response.responseText);
   } catch (error) {
     throw new Error(`Invalid JSON response: ${response}`);
   }

@@ -23,4 +23,5 @@ declare interface AnimeSongStaff {
   names: string[];
   members: AnimeSongStaff[];
   anilistId: number | null;
+  rateLimited: boolean;
 }

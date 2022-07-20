@@ -1,6 +1,6 @@
 import style from "../style.module.css";
 import { populateSentece } from "../utils";
-import { request } from "../network";
+import { rawRequest } from "../network";
 
 const REPORT_STAFF_URL =
   "https://maker.ifttt.com/trigger/staff_mappings_report/with/key/ouuC58ABvq49sXEngMUaNqg0FZn7oFM8pnY4cPUqRKz";
@@ -16,7 +16,7 @@ function reportStaff(staff: AnimeSongStaff) {
     value3: populateSentece(staff.names).join(""),
   };
 
-  request(REPORT_STAFF_URL, {
+  rawRequest(REPORT_STAFF_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +28,7 @@ function reportStaff(staff: AnimeSongStaff) {
 
 function formatStaffs(staffs: AnimeSongStaff[]) {
   function onStaffClick(event: MouseEvent, staff: AnimeSongStaff) {
-    if (event.altKey && event.button === 0) {
+    if (event.altKey && event.button === 0 && !staff.rateLimited) {
       console.log(`Reporting staff ${staff.id}`);
       reportStaff(staff);
       const element = event.target as HTMLElement;
@@ -49,6 +49,16 @@ function formatStaffs(staffs: AnimeSongStaff[]) {
         >
           {data.names[0]}
         </a>
+      );
+    } else if (data.rateLimited) {
+      return (
+        <span
+          data-rate-limited
+          data-id={data.id}
+          onclick={(e: MouseEvent) => onStaffClick(e, data)}
+        >
+          {data.names[0]}
+        </span>
       );
     } else {
       return (

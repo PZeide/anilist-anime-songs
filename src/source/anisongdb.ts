@@ -120,12 +120,29 @@ async function fetchSongsFromAnisongDb(
   ): Promise<AnimeSongStaff[]> {
     const staffs = [];
     for (const anisongStaff of anisongStaffs) {
-      staffs.push({
-        id: anisongStaff.id,
-        names: anisongStaff.names,
-        members: await formatStaffs(anisongStaff.members || []),
-        anilistId: await findAnilistStaff(anisongStaff.id, anisongStaff.names),
-      });
+      try {
+        staffs.push({
+          id: anisongStaff.id,
+          names: anisongStaff.names,
+          members: await formatStaffs(anisongStaff.members || []),
+          anilistId: await findAnilistStaff(anisongStaff.id, anisongStaff.names),
+        });
+      } catch (e) {
+        if (e.message === "Too many requests" || e.message === "Staff search request limit reached") {
+          console.warn(`Skipped staff ${anisongStaff.names[0]} due to rate limit.`);
+          staffs.push({
+            id: anisongStaff.id,
+            names: anisongStaff.names,
+            members: await formatStaffs(anisongStaff.members || []),
+            anilistId: null,
+            rateLimited: true
+          });
+
+          continue;
+        }
+
+        throw e;
+      }
     }
 
     return staffs;
