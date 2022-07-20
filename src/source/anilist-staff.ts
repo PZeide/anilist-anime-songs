@@ -70,8 +70,8 @@ async function searchWithNames(
   }
 
   const headersArray = response.responseHeaders.trim().split(/[\r\n]+/);
-  const xRateLimitRemaining = headersArray.find(
-    (header: string) => header.startsWith("x-ratelimit-remaining:")
+  const xRateLimitRemaining = headersArray.find((header: string) =>
+    header.startsWith("x-ratelimit-remaining:")
   );
   if (xRateLimitRemaining !== undefined) {
     const remaining = parseInt(xRateLimitRemaining.split(":")[1].trim());
@@ -100,7 +100,8 @@ export async function findAnilistStaff(
     id
   );
   if (cachedAnilistStaffId !== undefined) return cachedAnilistStaffId;
-  if (requestLimitReached) throw new Error("Staff search request limit reached");
+  if (requestLimitReached)
+    throw new Error("Staff search request limit reached");
 
   for (const name of names) {
     console.log("Searching for staff with name", name);
