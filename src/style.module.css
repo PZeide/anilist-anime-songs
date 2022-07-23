@@ -40,12 +40,10 @@
 }
 
 .songEntry {
-  position: relative;
   background: rgb(var(--color-foreground));
   border-radius: 3px;
   margin-bottom: 15px;
   padding: 18px;
-  position: relative;
   font-size: 1.4rem;
 }
 
@@ -60,6 +58,34 @@
 
 .songArtist > span[data-rate-limited] {
   color: #c1a841;
+}
+
+.groupIcon {
+  width: 17px;
+  height: 17px;
+  fill: rgb(var(--color-text));
+  transition: .15s;
+  vertical-align: middle;
+}
+
+a:hover > .groupIcon {
+  fill: rgb(var(--color-blue));
+}
+
+.membersPopup {
+  position: absolute;
+  z-index: 10;
+  background-color: rgb(var(--color-foreground-blue));
+  max-width: 400px;
+  padding: 14px;
+  font-size: 1.4rem;
+  transition: opacity 0.2s ease-out;
+  opacity: 0;
+}
+
+.membersPopup div:first-child {
+  font-weight: 500;
+  margin-bottom: 4px;
 }
 
 .entryShowMore {

@@ -1,77 +1,9 @@
 import style from "../style.module.css";
-import { populateSentece } from "../utils";
-import { rawRequest } from "../network";
-
-const REPORT_STAFF_URL =
-  "https://maker.ifttt.com/trigger/staff_mappings_report/with/key/ouuC58ABvq49sXEngMUaNqg0FZn7oFM8pnY4cPUqRKz";
+import { SongStaffs } from "./song-staffs";
 
 type Properties = {
   song: AnimeSong;
 };
-
-function reportStaff(staff: AnimeSongStaff) {
-  const data = {
-    value1: staff.id.toString(),
-    value2: staff.anilistId?.toString() || "null",
-    value3: populateSentece(staff.names).join(""),
-  };
-
-  rawRequest(REPORT_STAFF_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    data: JSON.stringify(data),
-  });
-}
-
-function formatStaffs(staffs: AnimeSongStaff[]) {
-  function onStaffClick(event: MouseEvent, staff: AnimeSongStaff) {
-    if (event.altKey && event.button === 0 && !staff.rateLimited) {
-      console.log(`Reporting staff ${staff.id}`);
-      reportStaff(staff);
-      const element = event.target as HTMLElement;
-      element.style.cssText = "color: #bc4349 !important;";
-      event.preventDefault();
-    }
-  }
-
-  return populateSentece(staffs).map((data) => {
-    if (typeof data === "string") return <span>{data}</span>;
-
-    if (data.anilistId !== null) {
-      return (
-        <a
-          href={`https://anilist.co/staff/${data.anilistId}`}
-          data-id={data.id}
-          onclick={(e: MouseEvent) => onStaffClick(e, data)}
-        >
-          {data.names[0]}
-        </a>
-      );
-    } else if (data.rateLimited) {
-      return (
-        <span
-          data-rate-limited
-          data-id={data.id}
-          onclick={(e: MouseEvent) => onStaffClick(e, data)}
-        >
-          {data.names[0]}
-        </span>
-      );
-    } else {
-      return (
-        <span
-          data-id={data.id}
-          onclick={(e: MouseEvent) => onStaffClick(e, data)}
-        >
-          {data.names[0]}
-        </span>
-      );
-    }
-  });
-}
 
 function fileLink(text: string, color: string, url: string) {
   return (
@@ -123,7 +55,7 @@ export default function SongEntry(props: Properties) {
           <div className={style.songTitle}>{props.song.name}</div>
 
           <div className={style.songArtist}>
-            {formatStaffs(props.song.artists)}
+            <SongStaffs staffs={props.song.artists} showGroupMembers={true} />
           </div>
 
           <a className={style.entryShowMore} onClick={toggleExpand}>
@@ -134,14 +66,20 @@ export default function SongEntry(props: Properties) {
           {props.song.composers.length > 0 && (
             <div className={style.songInfoEntry}>
               <span>Composers: </span>
-              {formatStaffs(props.song.composers)}
+              <SongStaffs
+                staffs={props.song.composers}
+                showGroupMembers={true}
+              />
             </div>
           )}
 
           {props.song.arrangers.length > 0 && (
             <div className={style.songInfoEntry}>
               <span>Arrangers: </span>
-              {formatStaffs(props.song.arrangers)}
+              <SongStaffs
+                staffs={props.song.arrangers}
+                showGroupMembers={true}
+              />
             </div>
           )}
 
