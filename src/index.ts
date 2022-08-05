@@ -4,7 +4,7 @@ import {
   resetContainerInjector,
   runWithContainer,
 } from "./container";
-import { fetchSongs } from "./source/anisongdb";
+import { fetchSongs, fetchAnnId } from "./source/anisongdb";
 import {
   createSongsContainer,
   createSongsGrid,
@@ -38,9 +38,10 @@ function addSongs(anilistId: number) {
     createSongsContainer(songsGrid, "Insert");
     createSongsContainer(songsGrid, "Ending");
 
+    const annId = await fetchAnnId(anilistId);
     async function tryRenderSongs(type: SongType) {
       try {
-        renderSongs(songsGrid, type, await fetchSongs(type, anilistId));
+        renderSongs(songsGrid, type, await fetchSongs(type, annId));
       } catch (e) {
         console.error(`Error loading ${type} songs`, e);
         setContainersError(songsGrid, type);

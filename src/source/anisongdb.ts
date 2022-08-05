@@ -72,7 +72,7 @@ async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
   return parseInt(annId);
 }
 
-async function getAnnId(anilistId: number): Promise<number | null> {
+export async function fetchAnnId(anilistId: number): Promise<number | null> {
   const mappings = await getMappings();
   if (mappings.annIds[anilistId] !== undefined)
     return mappings.annIds[anilistId];
@@ -90,7 +90,7 @@ async function getAnnId(anilistId: number): Promise<number | null> {
   return annId;
 }
 
-async function fetchSongsFromAnisongDb(
+export async function fetchSongs(
   fetchType: SongType,
   annId: number
 ): Promise<AnimeSong[]> {
@@ -175,14 +175,4 @@ async function fetchSongsFromAnisongDb(
   }
 
   return songs;
-}
-
-export async function fetchSongs(
-  fetchType: SongType,
-  anilistId: number
-): Promise<AnimeSong[]> {
-  const annId = await getAnnId(anilistId);
-  if (annId === null) return [];
-
-  return fetchSongsFromAnisongDb(fetchType, annId);
 }
