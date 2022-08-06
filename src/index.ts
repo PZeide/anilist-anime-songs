@@ -18,9 +18,6 @@ import {
   garbageCollectCache,
 } from "./storage/cache";
 import { startNetworkProfiling, stopNetworkProfiling } from "./network";
-
-import "@violentmonkey/dom";
-import "@violentmonkey/ui";
 import { resetLimitIndicator } from "./source/anilist-staff";
 
 GM_addStyle(stylesheet);

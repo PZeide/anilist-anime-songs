@@ -14,6 +14,7 @@
 // @updateURL   https://github.com/PZeide/anilist-anime-songs/releases/latest/download/anilist-anime-songs.user.js
 // @downloadURL https://github.com/PZeide/anilist-anime-songs/releases/latest/download/anilist-anime-songs.user.js
 // @supportURL  https://github.com/PZeide/anilist-anime-songs/issues
+// @require https://cdn.jsdelivr.net/combine/npm/@violentmonkey/dom@2,npm/@violentmonkey/ui@0.7.5
 // ==/UserScript==
 
 /**
