@@ -38,7 +38,11 @@ function addSongs(anilistId: number) {
     const annId = await fetchAnnId(anilistId);
     async function tryRenderSongs(type: SongType) {
       try {
-        renderSongs(songsGrid, type, await fetchSongs(type, annId));
+        if (annId !== null) {
+          renderSongs(songsGrid, type, await fetchSongs(type, annId));
+        } else {
+          renderSongs(songsGrid, type, []);
+        }
       } catch (e) {
         console.error(`Error loading ${type} songs`, e);
         setContainersError(songsGrid, type);
