@@ -113,38 +113,43 @@ export function SongStaffs(props: Properties) {
     }
   }
 
-  return (<>
-    {populateSentece(props.staffs).map((data) => {
-      if (typeof data === "string") return <span>{data}</span>;
+  return (
+    <>
+      {populateSentece(props.staffs).map((data) => {
+        if (typeof data === "string") return <span>{data}</span>;
 
-      if (data.anilistId !== null) {
-        return (
-          <a
-            href={`https://anilist.co/staff/${data.anilistId}`}
-            data-id={data.id}
-            onclick={(e: MouseEvent) => onClick(e, data)}
-            onmouseover={(e: MouseEvent) => onMouseOver(e, data)}
-            onmouseout={(e: MouseEvent) => onMouseOut(e, data)}
-          >
-            {data.members.length > 0 && props.showGroupMembers && <GroupIcon />}
-            {data.names[0]}
-          </a>
-        );
-      } else {
-        return (
-          <span
-            data-id={data.id}
-            onclick={(e: MouseEvent) => onClick(e, data)}
-            onmouseover={(e: MouseEvent) => onMouseOver(e, data)}
-            onmouseout={(e: MouseEvent) => onMouseOut(e, data)}
-            {...(data.rateLimited && { style: "color: #bc4349 !important;" })}
-          >
-            {data.members.length > 0 && props.showGroupMembers && <GroupIcon />}
-            {data.names[0]}
-          </span>
-        );
-      }
-    })
-  }
-  </>)
+        if (data.anilistId !== null) {
+          return (
+            <a
+              href={`https://anilist.co/staff/${data.anilistId}`}
+              data-id={data.id}
+              onclick={(e: MouseEvent) => onClick(e, data)}
+              onmouseover={(e: MouseEvent) => onMouseOver(e, data)}
+              onmouseout={(e: MouseEvent) => onMouseOut(e, data)}
+            >
+              {data.members.length > 0 && props.showGroupMembers && (
+                <GroupIcon />
+              )}
+              {data.names[0]}
+            </a>
+          );
+        } else {
+          return (
+            <span
+              data-id={data.id}
+              onclick={(e: MouseEvent) => onClick(e, data)}
+              onmouseover={(e: MouseEvent) => onMouseOver(e, data)}
+              onmouseout={(e: MouseEvent) => onMouseOut(e, data)}
+              {...(data.rateLimited && { style: "color: #bc4349 !important;" })}
+            >
+              {data.members.length > 0 && props.showGroupMembers && (
+                <GroupIcon />
+              )}
+              {data.names[0]}
+            </span>
+          );
+        }
+      })}
+    </>
+  );
 }
