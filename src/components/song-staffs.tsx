@@ -80,7 +80,10 @@ export function SongStaffs(props: Properties) {
 
       // Show the popup just below the targetElement
       const targetRect = targetElement.getBoundingClientRect();
-      popupElement.style.top = `${targetRect.bottom + window.scrollY + 6}px`;
+      const popupRect = popupElement.getBoundingClientRect();
+      popupElement.style.top = `${
+        targetRect.top + window.scrollY - popupRect.height - 6
+      }px`;
       popupElement.style.left = `${targetRect.left + window.scrollX - 20}px`;
       popupElement.style.opacity = "1";
     } else {
