@@ -4,11 +4,12 @@ import {
   getCachedItem,
 } from "../storage/cache";
 import { getMappings } from "../storage/mappings";
-import { requestJson } from "../network";
+import { rawRequest, requestJson } from "../network";
 import { findAnilistStaff } from "./anilist-staff";
 
 const ANILIST_API = "https://graphql.anilist.co";
 const MAL_API = "https://api.jikan.moe/v4";
+const MAL_ANIME = "https://myanimelist.net/anime";
 const ANISONGDB_API = "https://anisongdb.com/api";
 
 const ANN_ANIME_ID_TTL = 60 * 60 * 24;
@@ -41,6 +42,22 @@ async function fetchMalId(anilistId: number): Promise<number | null> {
 }
 
 async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
+  const response = await rawRequest(`${MAL_ANIME}/${malId}`);
+  console.log(response);
+  if (response.status !== 200)
+    return null;
+
+  const html = response.responseText;
+  const annId = html.match(/encyclopedia\/anime\.php\?id=(\d+)/);
+
+  if (annId === null || annId[1] === undefined)
+    return null;
+
+  return parseInt(annId[1]);
+}
+
+async function fetchAnnIdFromMalKillMe(malId: number): Promise<number | null> {
+  // Thanks Jikan for breaking this
   const response = await requestJson(`${MAL_API}/anime/${malId}/external`, {
     method: "GET",
     headers: {
@@ -83,6 +100,9 @@ export async function fetchAnnId(anilistId: number): Promise<number | null> {
   const malId = await fetchMalId(anilistId);
   if (malId === null) return null;
 
+
+  console.log("MAL ID: " + malId);
+  // Now scraping MAL site because Jikan is broken
   const annId = await fetchAnnIdFromMal(malId);
   if (annId === null) return null;
 
