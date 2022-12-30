@@ -8,6 +8,7 @@
 // @author      process.env.AUTHOR
 // @connect     graphql.anilist.co
 // @connect     api.jikan.moe
+// @connect     myanimelist.net
 // @connect     anilist-anime-songs-mappings-default-rtdb.europe-west1.firebasedatabase.app
 // @connect     anisongdb.com
 // @connect     maker.ifttt.com

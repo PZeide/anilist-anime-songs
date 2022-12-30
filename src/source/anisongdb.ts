@@ -43,7 +43,6 @@ async function fetchMalId(anilistId: number): Promise<number | null> {
 
 async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
   const response = await rawRequest(`${MAL_ANIME}/${malId}`);
-  console.log(response);
   if (response.status !== 200) return null;
 
   const html = response.responseText;
@@ -98,7 +97,6 @@ export async function fetchAnnId(anilistId: number): Promise<number | null> {
   const malId = await fetchMalId(anilistId);
   if (malId === null) return null;
 
-  console.log("MAL ID: " + malId);
   // Now scraping MAL site because Jikan is broken
   const annId = await fetchAnnIdFromMal(malId);
   if (annId === null) return null;
