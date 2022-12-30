@@ -44,14 +44,12 @@ async function fetchMalId(anilistId: number): Promise<number | null> {
 async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
   const response = await rawRequest(`${MAL_ANIME}/${malId}`);
   console.log(response);
-  if (response.status !== 200)
-    return null;
+  if (response.status !== 200) return null;
 
   const html = response.responseText;
   const annId = html.match(/encyclopedia\/anime\.php\?id=(\d+)/);
 
-  if (annId === null || annId[1] === undefined)
-    return null;
+  if (annId === null || annId[1] === undefined) return null;
 
   return parseInt(annId[1]);
 }
@@ -99,7 +97,6 @@ export async function fetchAnnId(anilistId: number): Promise<number | null> {
 
   const malId = await fetchMalId(anilistId);
   if (malId === null) return null;
-
 
   console.log("MAL ID: " + malId);
   // Now scraping MAL site because Jikan is broken
