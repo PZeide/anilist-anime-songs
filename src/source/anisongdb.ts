@@ -41,7 +41,7 @@ async function fetchMalId(anilistId: number): Promise<number | null> {
   return response.data.Media.idMal;
 }
 
-async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
+async function fetchAnnIdFromMalScrap(malId: number): Promise<number | null> {
   const response = await rawRequest(`${MAL_ANIME}/${malId}`);
   if (response.status !== 200) return null;
 
@@ -53,8 +53,7 @@ async function fetchAnnIdFromMal(malId: number): Promise<number | null> {
   return parseInt(annId[1]);
 }
 
-async function fetchAnnIdFromMalKillMe(malId: number): Promise<number | null> {
-  // Thanks Jikan for breaking this
+async function fetchAnnIdFromMalJikan(malId: number): Promise<number | null> {
   const response = await requestJson(`${MAL_API}/anime/${malId}/external`, {
     method: "GET",
     headers: {
@@ -69,8 +68,7 @@ async function fetchAnnIdFromMalKillMe(malId: number): Promise<number | null> {
   }
 
   const annExternal = response.data.find(
-    (external: { name: string; url: string }) =>
-      external.name === "AnimeNewsNetwork"
+    (external: { name: string; url: string }) => external.name === "ANN"
   );
   if (annExternal === undefined) {
     console.warn("No candidate ANN id found for id: " + malId);
@@ -97,8 +95,7 @@ export async function fetchAnnId(anilistId: number): Promise<number | null> {
   const malId = await fetchMalId(anilistId);
   if (malId === null) return null;
 
-  // Now scraping MAL site because Jikan is broken
-  const annId = await fetchAnnIdFromMal(malId);
+  const annId = await fetchAnnIdFromMalJikan(malId);
   if (annId === null) return null;
 
   addCachedItem<number>(ANN_ANIME_ID_CACHE, anilistId, annId, ANN_ANIME_ID_TTL);

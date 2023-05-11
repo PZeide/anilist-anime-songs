@@ -1,6 +1,6 @@
 {
   "name": "anilist-anime-songs",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "User script to add anime songs information and files on anilist.co",
   "author": "Zeide",
   "license": "MIT",
@@ -16,7 +16,8 @@
     "prebuild": "run-s ci clean",
     "build": "cross-env NODE_ENV=production run-s build:js",
     "ci": "run-s lint",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@babel/runtime": "^7.18.0",

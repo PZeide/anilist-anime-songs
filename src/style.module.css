@@ -64,7 +64,7 @@
   width: 17px;
   height: 17px;
   fill: rgb(var(--color-text));
-  transition: .15s;
+  transition: 0.15s;
   vertical-align: middle;
 }
 
@@ -143,11 +143,11 @@ a:hover > .groupIcon {
 }
 
 .songFile:hover {
-  color: rgba(26, 27, 28, .6);
+  color: rgba(26, 27, 28, 0.6);
 }
 
 .songFile:hover:visited {
-  color: rgba(26, 27, 28, .6);
+  color: rgba(26, 27, 28, 0.6);
 }
 
 .songSearchEngines {
@@ -165,8 +165,8 @@ a:hover > .groupIcon {
 }
 
 .songSearchEngineEntry:hover {
-  transition-duration: .15s;
-  opacity: .6;
+  transition-duration: 0.15s;
+  opacity: 0.6;
 }
 
 .songSearchEngineEntry > svg {

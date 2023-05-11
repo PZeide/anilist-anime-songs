@@ -11,7 +11,7 @@ but should be working with most of the full-featured userscripts.
 
 ## Development
 
-``` sh
+```sh
 $ yarn dev
 ```
 
@@ -23,6 +23,6 @@ $ yarn build
 
 ## Lint
 
-``` sh
+```sh
 $ yarn lint
 ```
