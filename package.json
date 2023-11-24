@@ -19,27 +19,27 @@
     "build": "cross-env NODE_ENV=production run-s ci clean build:js"
   },
   "dependencies": {
-    "@babel/runtime": "^7.22.10",
+    "@babel/runtime": "^7.23.4",
     "@violentmonkey/dom": "^2.1.5",
     "@violentmonkey/ui": "^0.7.8",
     "consola": "^3.2.3",
-    "solid-js": "^1.7.11"
+    "solid-js": "^1.8.6"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.22.5",
+    "@babel/plugin-transform-react-jsx": "^7.23.4",
     "@gera2ld/plaid": "~2.6.0",
     "@gera2ld/plaid-rollup": "~2.6.0",
-    "@unocss/postcss": "^0.55.2",
-    "@violentmonkey/types": "^0.1.5",
-    "babel-preset-solid": "^1.7.7",
-    "del-cli": "^5.0.0",
+    "@unocss/postcss": "^0.57.7",
+    "@violentmonkey/types": "^0.1.7",
+    "babel-preset-solid": "^1.8.6",
+    "del-cli": "^5.1.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
     "husky": "^8.0.3",
-    "lint-staged": "^14.0.1",
+    "lint-staged": "^15.1.0",
     "prettier": "3.1.0",
-    "rollup-plugin-userscript": "^0.2.0",
-    "unocss": "^0.55.2"
+    "rollup-plugin-userscript": "^0.2.1",
+    "unocss": "^0.57.7"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --fix"

@@ -24,7 +24,7 @@ export default class Cache<K extends NonNullable<unknown>, V> {
       return item as V;
     } catch (e) {
       this.logger.warn(
-        `Failed to fetch cached item in cache ${this.cacheName} at ${key}.`,
+        `Failed to fetch cached item in cache ${this.cacheName} at ${key}`,
         e,
       );
       return undefined;
@@ -34,7 +34,7 @@ export default class Cache<K extends NonNullable<unknown>, V> {
   public async set(key: K, value: V) {
     if (value === undefined) {
       this.logger.warn(
-        `Failed to set cached item in cache ${this.cacheName} at ${key}, undefined is not a valid value.`,
+        `Failed to set cached item in cache ${this.cacheName} at ${key}, undefined is not a valid value`,
       );
       return;
     }
@@ -44,7 +44,7 @@ export default class Cache<K extends NonNullable<unknown>, V> {
       await GM.setValue(itemKey, value);
     } catch (e) {
       this.logger.warn(
-        `Failed to set cached item in cache ${this.cacheName} at ${key}.`,
+        `Failed to set cached item in cache ${this.cacheName} at ${key}`,
         e,
       );
     }
@@ -56,7 +56,7 @@ export default class Cache<K extends NonNullable<unknown>, V> {
       await GM.deleteValue(itemKey);
     } catch (e) {
       this.logger.warn(
-        `Failed to delete item in cache ${this.cacheName} at ${key}.`,
+        `Failed to delete item in cache ${this.cacheName} at ${key}`,
         e,
       );
     }
@@ -68,6 +68,10 @@ export default class Cache<K extends NonNullable<unknown>, V> {
       const item = await GM.getValue(itemKey);
       return item === undefined;
     } catch (e) {
+      this.logger.warn(
+        `Failed to check if item exists in cache ${this.cacheName} at ${key}`,
+        e,
+      );
       return false;
     }
   }

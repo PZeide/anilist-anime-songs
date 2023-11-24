@@ -4,6 +4,9 @@
 // @description A script to add songs information and files on anilist.co
 // @match       https://anilist.co/*
 // @grant       GM_addStyle
+// @grant       GM.getValue
+// @grant       GM.setValue
+// @grant       GM.deleteValue
 // @version     process.env.VERSION
 // @author      process.env.AUTHOR
 // @connect     graphql.anilist.co
