@@ -35,8 +35,7 @@ export default class UserscriptBootstrapper {
     if (overview === null) return;
 
     // Check if ASS is not already injected
-    if (overview.dataset[UserscriptBootstrapper.INJECTOR_MARKER] !== undefined)
-      return;
+    if (overview.dataset[UserscriptBootstrapper.INJECTOR_MARKER] !== undefined) return;
 
     const match = UserscriptBootstrapper.ANIME_ID_REGEXP.exec(location.href);
     if (match === null || match.length === 0) return;
@@ -45,8 +44,7 @@ export default class UserscriptBootstrapper {
 
     this.logger.info(`Anime found with id ${animeId}`);
 
-    overview.dataset[UserscriptBootstrapper.INJECTOR_MARKER] =
-      animeId.toString();
+    overview.dataset[UserscriptBootstrapper.INJECTOR_MARKER] = animeId.toString();
     this.loadAnimeSongs(animeId);
   }
 

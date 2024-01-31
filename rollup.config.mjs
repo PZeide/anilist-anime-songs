@@ -1,63 +1,42 @@
-import path from 'path';
-import plaid from '@gera2ld/plaid';
+import { defineExternal, definePlugins } from '@gera2ld/plaid-rollup';
+import { defineConfig } from 'rollup';
 import userscript from 'rollup-plugin-userscript';
 import pkg from './package.json' assert { type: 'json' };
 
-const { getRollupPlugins } = plaid;
-const DIST = 'dist';
-
-const bundleOptions = {
-  extend: true,
-  esModule: false,
-};
-const rollupConfig = [
-  {
-    input: 'src/index.ts',
-    plugins: [
-      ...getRollupPlugins({
-        esm: true,
-        minimize: false,
-        postcss: {
-          inject: false,
-          minimize: true,
-        },
-        extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx'],
-      }),
-      userscript(
-        path.resolve('src/meta.js'),
-        meta => meta
-          .replace('process.env.VERSION', pkg.version)
-          .replace('process.env.AUTHOR', pkg.author),
-      ),
-    ],
-    external: [
-      '@violentmonkey/ui',
-      '@violentmonkey/dom',
-      'solid-js',
-      'solid-js/web',
-    ],
-    output: {
-      format: 'iife',
-      file: `${DIST}/index.user.js`,
-      globals: {
-        '@violentmonkey/dom': 'VM',
-        '@violentmonkey/ui': 'VM',
-        // solid-js doesn't provide a UMD bundle, so use the prebuilt version from `@violentmonkey/dom`
-        'solid-js': 'VM.solid',
-        'solid-js/web': 'VM.solid.web',
+export default defineConfig([{
+  input: 'src/index.ts',
+  plugins: [
+    ...definePlugins({
+      esm: true,
+      minimize: false,
+      postcss: {
+        inject: false,
+        minimize: true,
       },
-      ...bundleOptions,
+      extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx'],
+    }),
+    userscript(meta => meta
+      .replace('process.env.VERSION', pkg.version)
+      .replace('process.env.AUTHOR', pkg.author),
+    ),
+  ],
+  external: defineExternal([
+    '@violentmonkey/ui',
+    '@violentmonkey/dom',
+    'solid-js',
+    'solid-js/web',
+  ]),
+  output: {
+    format: 'iife',
+    file: `dist/anilist-anime-songs.user.js`,
+    banner: `(async () => {`,
+    footer: `})();`,
+    globals: {
+      'solid-js': 'await import("https://esm.sh/solid-js")',
+      'solid-js/web': 'await import("https://esm.sh/solid-js/web")',
+      '@violentmonkey/dom': 'VM',
+      '@violentmonkey/ui': 'VM',
     },
-  },
-];
-
-rollupConfig.forEach((item) => {
-  item.output = {
     indent: false,
-    // If set to false, circular dependencies and live bindings for external imports won't work
-    externalLiveBindings: false,
-    ...item.output,
-  };
-});
-
-export default rollupConfig;
+  },
+}]);

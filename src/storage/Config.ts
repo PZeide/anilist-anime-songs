@@ -20,10 +20,7 @@ export class ConfigManager {
   public async init(): Promise<Config> {
     this.logger.info('Loading config from script storage');
 
-    const config = await GM.getValue(
-      ConfigManager.CONFIG_KEY,
-      ConfigManager.DEFAULT_CONFIG,
-    );
+    const config = await GM.getValue(ConfigManager.CONFIG_KEY, ConfigManager.DEFAULT_CONFIG);
 
     this.configProxy = new Proxy(config, {
       set: (target, property, value) => {
