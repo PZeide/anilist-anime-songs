@@ -1,9 +1,8 @@
 import consola, { ConsolaInstance } from 'consola';
 import { ConfigManager } from './storage/Config';
 import { observe } from '@violentmonkey/dom';
-import AnimeSongsManager from './songs/AnimeSongsManager';
 
-export default class UserscriptBootstrapper {
+export default class AnilistAnimeSongs {
   private static INJECTOR_MARKER = 'ass_injected';
   private static ANIME_ID_REGEXP = /anime\/(.+?)\//;
 
@@ -13,7 +12,7 @@ export default class UserscriptBootstrapper {
   private lastLocation: string;
 
   constructor() {
-    this.logger = consola.withTag('ass:bootstrapper');
+    this.logger = consola.withTag('bootstrapper');
     this.configManager = new ConfigManager();
   }
 
@@ -34,22 +33,16 @@ export default class UserscriptBootstrapper {
     // Check if the div actually exists
     if (overview === null) return;
 
-    // Check if ASS is not already injected
-    if (overview.dataset[UserscriptBootstrapper.INJECTOR_MARKER] !== undefined) return;
-
-    const match = UserscriptBootstrapper.ANIME_ID_REGEXP.exec(location.href);
+    const match = AnilistAnimeSongs.ANIME_ID_REGEXP.exec(location.href);
     if (match === null || match.length === 0) return;
 
     const animeId = parseInt(match[1]);
 
+    // Check if ASS is not already injected
+    if (overview.dataset[AnilistAnimeSongs.INJECTOR_MARKER] === animeId.toString()) return;
+
     this.logger.info(`Anime found with id ${animeId}`);
-
-    overview.dataset[UserscriptBootstrapper.INJECTOR_MARKER] = animeId.toString();
-    this.loadAnimeSongs(animeId);
-  }
-
-  private loadAnimeSongs(animeId: number) {
-    const animeSongsManager = new AnimeSongsManager(animeId);
-    animeSongsManager.init();
+    overview.dataset[AnilistAnimeSongs.INJECTOR_MARKER] = animeId.toString();
+    //this.loadAnimeSongs(animeId);
   }
 }

@@ -6,7 +6,7 @@ export default class Cache<K extends NonNullable<unknown>, V> {
   private cachePrefix: string;
 
   constructor(cacheName: string) {
-    this.logger = consola.withTag(`aas:cache:${cacheName}`);
+    this.logger = consola.withTag(`cache:${cacheName}`);
     this.cacheName = cacheName;
     this.cachePrefix = `$cache_${cacheName}`;
   }
@@ -17,50 +17,26 @@ export default class Cache<K extends NonNullable<unknown>, V> {
   }
 
   public async get(key: K): Promise<V | undefined> {
-    try {
-      const itemKey = this.cacheKey(key);
-      const item = await GM.getValue(itemKey);
-
-      return item as V;
-    } catch (e) {
-      this.logger.warn(`Failed to fetch cached item in cache ${this.cacheName} at ${key}`, e);
-      return undefined;
-    }
+    const itemKey = this.cacheKey(key);
+    const item = await GM.getValue(itemKey);
+    return item as V;
   }
 
   public async set(key: K, value: V) {
-    if (value === undefined) {
-      this.logger.warn(
-        `Failed to set cached item in cache ${this.cacheName} at ${key}, undefined is not a valid value`,
-      );
-      return;
-    }
+    if (value === undefined) throw new Error(`Cannot set item in cache at ${key}, undefined is not a valid value!`);
 
-    try {
-      const itemKey = this.cacheKey(key);
-      await GM.setValue(itemKey, value);
-    } catch (e) {
-      this.logger.warn(`Failed to set cached item in cache ${this.cacheName} at ${key}`, e);
-    }
+    const itemKey = this.cacheKey(key);
+    await GM.setValue(itemKey, value);
   }
 
   public async delete(key: K) {
-    try {
-      const itemKey = this.cacheKey(key);
-      await GM.deleteValue(itemKey);
-    } catch (e) {
-      this.logger.warn(`Failed to delete item in cache ${this.cacheName} at ${key}`, e);
-    }
+    const itemKey = this.cacheKey(key);
+    await GM.deleteValue(itemKey);
   }
 
   public async exists(key: K): Promise<boolean> {
-    try {
-      const itemKey = this.cacheKey(key);
-      const item = await GM.getValue(itemKey);
-      return item === undefined;
-    } catch (e) {
-      this.logger.warn(`Failed to check if item exists in cache ${this.cacheName} at ${key}`, e);
-      return false;
-    }
+    const itemKey = this.cacheKey(key);
+    const item = await GM.getValue(itemKey);
+    return item === undefined;
   }
 }

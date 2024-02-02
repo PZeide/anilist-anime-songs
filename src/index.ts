@@ -1,6 +1,6 @@
 import './meta.js?userscript-metadata';
-import UserscriptBootstrapper from './UserscriptBootstrapper';
+import AnilistAnimeSongs from './AnilistAnimeSongs';
 
-new UserscriptBootstrapper().start().catch((e) => {
-  console.error('Failed to load Anilist Anime Songs bootstrapper, aborting...', e);
+new AnilistAnimeSongs().start().catch((e) => {
+  console.error('Failed to init AnilistAnimeSongs, aborted.', e);
 });
