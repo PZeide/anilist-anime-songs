@@ -9,7 +9,7 @@ function fileLink(text: string, color: string, url: string) {
   return (
     <a
       className={style.songFile}
-      href={`https://ladist1.catbox.video/${url}`}
+      href={`https://nawdist.animemusicquiz.com/${url}`}
       target="_blank"
       rel="noopener noreferrer"
       style={`background-color: ${color}`}
